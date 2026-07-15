@@ -1,5 +1,5 @@
-import Layla3DPage from '../../landingpage/layla/page';
+import { redirect } from "next/navigation"
 
-export default function Page() {
-  return <Layla3DPage />;
+export default function LaylaPage() {
+  redirect("/products/awaaz-labs")
 }
