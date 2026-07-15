@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="80" fill="url(#bg-gradient)" opacity="0.1"/>
+  
+  <!-- Robot Head -->
+  <rect x="60" y="50" width="80" height="100" rx="20" stroke="url(#robot-gradient)" stroke-width="4" fill="none"/>
+  
+  <!-- Eyes -->
+  <rect x="75" y="80" width="20" height="10" rx="5" fill="url(#glow-gradient)">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </rect>
+  <rect x="105" y="80" width="20" height="10" rx="5" fill="url(#glow-gradient)">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </rect>
+  
+  <!-- Mouth -->
+  <path d="M75 110 H125" stroke="url(#glow-gradient)" stroke-width="4" stroke-linecap="round">
+    <animate attributeName="d" values="M75 110 H125;M75 115 H125;M75 110 H125" dur="4s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Antenna -->
+  <line x1="100" y1="30" x2="100" y2="50" stroke="url(#robot-gradient)" stroke-width="4"/>
+  <circle cx="100" cy="25" r="5" fill="url(#glow-gradient)">
+    <animate attributeName="r" values="5;7;5" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Circuit Lines -->
+  <path d="M40 100 H55" stroke="url(#circuit-gradient)" stroke-width="2" stroke-dasharray="4,4">
+    <animate attributeName="stroke-dashoffset" values="8;0" dur="1s" repeatCount="indefinite"/>
+  </path>
+  <path d="M145 100 H160" stroke="url(#circuit-gradient)" stroke-width="2" stroke-dasharray="4,4">
+    <animate attributeName="stroke-dashoffset" values="8;0" dur="1s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Glowing Orbs -->
+  <circle cx="35" cy="100" r="4" fill="url(#glow-gradient)">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="165" cy="100" r="4" fill="url(#glow-gradient)">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <defs>
+    <linearGradient id="bg-gradient" x1="20" y1="20" x2="180" y2="180">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="robot-gradient" x1="60" y1="50" x2="140" y2="150">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <linearGradient id="glow-gradient" x1="0" y1="0" x2="100" y2="0">
+      <stop offset="0%" stop-color="#93C5FD"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <linearGradient id="circuit-gradient" x1="0" y1="0" x2="100" y2="0">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+</svg> 

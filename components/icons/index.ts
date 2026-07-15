@@ -1,0 +1,5 @@
+export { default as EnterpriseITIcon } from './EnterpriseITIcon'
+export { default as AIMLIcon } from './AIMLIcon'
+export { default as IoTIcon } from './IoTIcon'
+export { default as BlockchainIcon } from './BlockchainIcon'
+export { default as WebAppIcon } from './WebAppIcon' 

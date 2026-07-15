@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="85" fill="url(#bg-gradient)" opacity="0.12"/>
+  
+  <!-- Blockchain Structure -->
+  <g>
+    <!-- Block Chain Design -->
+    <g>
+      <!-- Block 1 -->
+      <rect x="35" y="40" width="45" height="45" rx="12" fill="url(#block-gradient)" opacity="0.9">
+        <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <!-- Block 2 -->
+      <rect x="75" y="25" width="45" height="45" rx="12" fill="url(#block-gradient)" opacity="0.9">
+        <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+      </rect>
+      <!-- Block 3 -->
+      <rect x="115" y="40" width="45" height="45" rx="12" fill="url(#block-gradient)" opacity="0.9">
+        <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="1s"/>
+      </rect>
+      
+      <!-- Connection Lines -->
+      <path d="M80 65 L80 47 L120 47 L120 65" 
+            stroke="url(#line-gradient)" 
+            stroke-width="5" 
+            stroke-dasharray="8,4"
+            stroke-linecap="round">
+        <animate attributeName="stroke-dashoffset" values="24;0" dur="2s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    
+    <!-- Hash Data Visualization -->
+    <g opacity="0.9" transform="translate(50, 55)">
+      <text font-family="monospace" font-size="9" fill="white">SHA256</text>
+    </g>
+    <g opacity="0.9" transform="translate(90, 40)">
+      <text font-family="monospace" font-size="9" fill="white">HASH</text>
+    </g>
+    <g opacity="0.9" transform="translate(130, 55)">
+      <text font-family="monospace" font-size="9" fill="white">BIO</text>
+    </g>
+  </g>
+
+  <!-- Central Authentication Hub -->
+  <g>
+    <circle cx="100" cy="110" r="52" fill="url(#hub-gradient)" opacity="0.15"/>
+    <circle cx="100" cy="110" r="50" stroke="url(#hub-stroke)" stroke-width="4" fill="none" stroke-dasharray="10,6">
+      <animate attributeName="stroke-dashoffset" values="100;0" dur="15s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="50;52;50" dur="4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Enhanced Fingerprint Pattern -->
+  <g transform="translate(68, 78)">
+    <!-- Outer Loop -->
+    <path d="M1,32 C1,18 18,4 32,4 C46,4 63,18 63,32" 
+          stroke="url(#fingerprint-gradient)" 
+          stroke-width="4.5" 
+          stroke-linecap="round"
+          fill="none">
+      <animate attributeName="stroke-dasharray" values="0,120;100,0" dur="1.2s" fill="freeze"/>
+    </path>
+    
+    <!-- Middle Loop -->
+    <path d="M14,32 C14,22 22,16 32,16 C42,16 50,22 50,32" 
+          stroke="url(#fingerprint-gradient)" 
+          stroke-width="4.5" 
+          stroke-linecap="round"
+          fill="none">
+      <animate attributeName="stroke-dasharray" values="0,100;80,0" dur="1.2s" fill="freeze" begin="0.2s"/>
+    </path>
+    
+    <!-- Inner Loop -->
+    <path d="M23,32 C23,27 27,23 32,23 C37,23 41,27 41,32" 
+          stroke="url(#fingerprint-gradient)" 
+          stroke-width="4.5" 
+          stroke-linecap="round"
+          fill="none">
+      <animate attributeName="stroke-dasharray" values="0,100;60,0" dur="1.2s" fill="freeze" begin="0.4s"/>
+    </path>
+    
+    <!-- Center Line -->
+    <path d="M32,32 L32,44" 
+          stroke="url(#fingerprint-gradient)" 
+          stroke-width="4.5" 
+          stroke-linecap="round">
+      <animate attributeName="stroke-dasharray" values="0,24;20,0" dur="0.8s" fill="freeze" begin="0.6s"/>
+    </path>
+  </g>
+  
+  <!-- Enhanced Security Shield -->
+  <g transform="translate(76, 76)">
+    <path d="M24,0 C24,14 34,28 48,28" 
+          stroke="url(#shield-gradient)" 
+          stroke-width="4.5" 
+          stroke-linecap="round"
+          fill="none">
+      <animate attributeName="stroke-dasharray" values="0,60;55,0" dur="1s" fill="freeze" begin="1s"/>
+    </path>
+    
+    <path d="M24,0 C24,14 14,28 0,28" 
+          stroke="url(#shield-gradient)" 
+          stroke-width="4.5" 
+          stroke-linecap="round"
+          fill="none">
+      <animate attributeName="stroke-dasharray" values="0,60;55,0" dur="1s" fill="freeze" begin="1s"/>
+    </path>
+  </g>
+  
+  <!-- Real-time Verification Elements -->
+  <g transform="translate(65, 125)">
+    <rect x="0" y="0" width="70" height="24" rx="12" fill="url(#face-gradient)" opacity="0.6"/>
+    
+    <!-- Verification Status -->
+    <path d="M23,12 L32,20 L47,7" 
+          stroke="white" 
+          stroke-width="4.5" 
+          stroke-linecap="round"
+          fill="none">
+      <animate attributeName="stroke-dasharray" values="0,60;55,0" dur="0.8s" fill="freeze" begin="1.5s"/>
+    </path>
+  </g>
+  
+  <!-- Enhanced Lock Icon -->
+  <g>
+    <circle cx="100" cy="110" r="26" fill="url(#lock-gradient)">
+      <animate attributeName="r" values="24;26;24" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Lock Body -->
+    <rect x="86" y="108" width="28" height="22" rx="6" fill="white"/>
+    
+    <!-- Lock Shackle -->
+    <path d="M89 108V100C89 96 94 92 100 92V92C106 92 111 96 111 100V108" 
+          stroke="white" 
+          stroke-width="5" 
+          stroke-linecap="round"/>
+    
+    <!-- Security Pulse Rings -->
+    <circle cx="100" cy="110" r="28" stroke="url(#pulse-gradient)" stroke-width="3" fill="none" opacity="0">
+      <animate attributeName="r" values="26;60" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <circle cx="100" cy="110" r="28" stroke="url(#pulse-gradient)" stroke-width="3" fill="none" opacity="0">
+      <animate attributeName="r" values="26;60" dur="2s" repeatCount="indefinite" begin="0.7s"/>
+      <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite" begin="0.7s"/>
+    </circle>
+  </g>
+  
+  <!-- Enhanced Data Flow -->
+  <g>
+    <!-- Right Flow -->
+    <g transform="translate(115, 95)">
+      <text font-family="monospace" font-size="10" fill="url(#data-gradient)">AUTH</text>
+      <animateMotion 
+        path="M0,0 C20,-10 40,10 60,0" 
+        dur="3s" 
+        repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/>
+    </g>
+    
+    <!-- Left Flow -->
+    <g transform="translate(85, 95)">
+      <text font-family="monospace" font-size="10" fill="url(#data-gradient)">BIO</text>
+      <animateMotion 
+        path="M0,0 C-20,-10 -40,10 -60,0" 
+        dur="3s" 
+        repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite" begin="1s"/>
+    </g>
+  </g>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="200" y2="200">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="50%" stop-color="#E11D48"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+    
+    <linearGradient id="block-gradient" x1="0" y1="0" x2="40" y2="40">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+    
+    <linearGradient id="line-gradient" x1="0" y1="0" x2="0" y2="100">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#FCA5A5"/>
+    </linearGradient>
+    
+    <linearGradient id="hub-gradient" x1="60" y1="70" x2="140" y2="150">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+    
+    <linearGradient id="hub-stroke" x1="60" y1="70" x2="140" y2="150">
+      <stop offset="0%" stop-color="#FCA5A5"/>
+      <stop offset="100%" stop-color="#EF4444"/>
+    </linearGradient>
+    
+    <linearGradient id="fingerprint-gradient" x1="0" y1="0" x2="56" y2="56">
+      <stop offset="0%" stop-color="#FCA5A5"/>
+      <stop offset="100%" stop-color="#EF4444"/>
+    </linearGradient>
+    
+    <linearGradient id="shield-gradient" x1="0" y1="0" x2="40" y2="24">
+      <stop offset="0%" stop-color="#FCA5A5"/>
+      <stop offset="100%" stop-color="#EF4444"/>
+    </linearGradient>
+    
+    <linearGradient id="face-gradient" x1="0" y1="0" x2="60" y2="20">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+    
+    <linearGradient id="lock-gradient" x1="78" y1="88" x2="122" y2="132">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#BE123C"/>
+    </linearGradient>
+    
+    <linearGradient id="pulse-gradient" x1="72" y1="82" x2="128" y2="138">
+      <stop offset="0%" stop-color="#EF4444"/>
+      <stop offset="100%" stop-color="#FCA5A5"/>
+    </linearGradient>
+    
+    <linearGradient id="data-gradient" x1="0" y1="0" x2="16" y2="8">
+      <stop offset="0%" stop-color="#FCA5A5"/>
+      <stop offset="100%" stop-color="#EF4444"/>
+    </linearGradient>
+  </defs>
+</svg> 

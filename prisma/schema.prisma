@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ConsultationBooking {
+  id                 String         @id @default(cuid())
+  name               String
+  email              String
+  company            String?
+  phone              String?
+  focusArea          String
+  message            String?
+  source             String?
+  status             BookingStatus  @default(PENDING)
+  assignedConsultant  String?
+  submittedAt        DateTime       @default(now())
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([email])
+  @@index([focusArea])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}

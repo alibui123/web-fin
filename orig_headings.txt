@@ -1,0 +1,78 @@
+﻿
+> components\about.tsx:58:              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 
+finova-text-gradient">About Finova Solutions</h2>
+  components\about.tsx:59:              <div className="w-16 md:w-20 h-1 finova-gradient rounded-full mb-4 md:mb-6" />
+> components\about.tsx:81:            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 
+finova-text-gradient">Our Purpose</h2>
+  components\about.tsx:82:            <div className="w-16 md:w-20 h-1 finova-gradient rounded-full mx-auto" />
+> components\become-partner.tsx:17:          <h2 className="text-3xl font-bold mb-4">Become a Partner</h2>
+  components\become-partner.tsx:18:          <p className="text-lg text-foreground/70 mb-8">
+> components\blog-section.tsx:26:          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tighter 
+text-white">
+  components\blog-section.tsx:27:            Latest Insights
+> components\contact-modern.tsx:72:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Get in Touch</h2>
+  components\contact-modern.tsx:73:          <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
+> components\contact.tsx:104:          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 
+bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
+  components\contact.tsx:105:            Get in Touch
+> components\faq.tsx:51:          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tighter text-white">
+  components\faq.tsx:52:            Frequently Asked Questions
+> components\featured-partnerships.tsx:34:          <h2 className="text-3xl font-bold mb-4">Featured Partnerships</h2>
+  components\featured-partnerships.tsx:35:          <p className="text-foreground/70">
+> components\flagship-products.tsx:224:          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 
+sm:mb-6 uppercase tracking-tighter text-white">
+  components\flagship-products.tsx:225:            Flagship Products
+> components\home-contact.tsx:91:          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tighter 
+text-white">
+  components\home-contact.tsx:92:            Get In Touch
+> components\integrations.tsx:35:          <h2 className="text-3xl font-bold mb-4">Our Tech Stack</h2>
+  components\integrations.tsx:36:          <p className="text-foreground/70">
+> components\newsletter.tsx:48:            <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Stay Updated with Tech Trends</h2>
+  components\newsletter.tsx:49:
+> components\portfolio-showcase.tsx:567:            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+  components\portfolio-showcase.tsx:568:              What We've{" "}
+> components\portfolio-showcase.tsx:598:            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+  components\portfolio-showcase.tsx:599:              Case Studies &amp;{" "}
+> components\portfolio-showcase.tsx:662:            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+  components\portfolio-showcase.tsx:663:              Technology We{" "}
+> components\portfolio-showcase.tsx:717:              <h2 className="text-4xl md:text-5xl font-bold mb-5">
+  components\portfolio-showcase.tsx:718:                Ready to build something{" "}
+> components\product-comparison.tsx:34:          <h2 className="text-3xl font-bold mb-4">Use Cases</h2>
+  components\product-comparison.tsx:35:          <p className="text-foreground/70">
+> components\products-list.tsx:308:                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl 
+font-bold tracking-tight mb-2">{product.title}</h2>
+  components\products-list.tsx:309:                  <div className={`h-1 w-20 rounded-full bg-gradient-to-r 
+${product.gradient}`} />
+> components\projects-modern.tsx:67:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Our Projects</h2>
+  components\projects-modern.tsx:68:          <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
+> components\projects.tsx:54:          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text 
+text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
+  components\projects.tsx:55:            Our Projects
+> components\services-modern.tsx:96:          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tighter 
+text-white">
+  components\services-modern.tsx:97:            Our Services
+> components\services.tsx:57:              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold 
+text-cyan-300 mb-4 sm:mb-6">Our Services</h2>
+  components\services.tsx:58:              <p className="text-gray-300 max-w-3xl text-base sm:text-lg">
+> components\services.tsx:118:            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold 
+text-cyan-300 mb-4 sm:mb-6">Our Services</h2>
+  components\services.tsx:119:            <p className="text-gray-300 max-w-3xl text-base sm:text-lg">
+> components\social-links.tsx:16:          <h2 className="text-3xl font-bold mb-4">Connect With Us</h2>
+  components\social-links.tsx:17:          <p className="text-foreground/70 mb-8">
+> components\stats.tsx:71:          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tighter 
+text-white">
+  components\stats.tsx:72:            System Impact
+> components\tech-stack-modern.tsx:82:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Our Tech Stack</h2>
+  components\tech-stack-modern.tsx:83:          <p className="text-xl text-foreground/80 max-w-3xl mx-auto">
+> components\tech-stack.tsx:309:          <h2 className="text-3xl md:text-5xl font-bold uppercase tracking-tighter 
+text-white">
+  components\tech-stack.tsx:310:            Technical Foundation
+> components\why-finova.tsx:46:          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 bg-clip-text 
+text-transparent bg-gradient-to-r from-cyan-500 to-purple-600">
+  components\why-finova.tsx:47:            Why Choose Finova?
+
+

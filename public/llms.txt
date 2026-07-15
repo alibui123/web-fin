@@ -1,0 +1,25 @@
+# Finova Solutions
+
+> Finova Solutions builds and runs AI agents that operate the work a business does by hand. Done-for-you and operated, not software handed over. Voice and workflow agents are built inside the client's existing tools and quality checked on every interaction by QualiCall. Live in production across government, fintech, insurance operations, B2B sales, and healthcare.
+
+## Core pages
+- [How it works](https://finovasolutions.tech/how-it-works): the managed model, built, run, and accountable to you
+- [Solutions](https://finovasolutions.tech/solutions): AI receptionist, workflow automation, custom AI development, and quality assurance
+- [Healthcare](https://finovasolutions.tech/healthcare): front desk, intake, reminders, and reactivation for clinics
+- [Home services](https://finovasolutions.tech/industries/home-services): never miss a call, capture every job
+- [Done-for-you](https://finovasolutions.tech/dfy): the managed offer for local businesses
+- [Trust](https://finovasolutions.tech/trust): accountability, QualiCall governance, data and compliance
+- [Pricing](https://finovasolutions.tech/pricing): engagement model and how investment works
+- [Pricing data](https://finovasolutions.tech/pricing.md): machine-readable engagement tiers
+- [Products](https://finovasolutions.tech/products): Awaaz voice AI, Qualicall AI QA, AI-Powered ERP, Mehman Nawaz hospitality suite
+- [About](https://finovasolutions.tech/about): the team, deployments, and approach
+- [Contact](https://finovasolutions.tech/contact): get in touch or book a call
+
+## Proof
+- AdvanzaTech: outbound B2B sales agent, 70 meetings booked in month two
+- Telecom Foundation: inbound Urdu agent on Odoo ERP, a Ministry of IT subsidiary
+- Sirius Solutions Global: insurance verification at scale for US medical billing
+- Incubated at the National Incubation Center, Cohort 5
+
+## Contact
+Book a call: https://calendly.com/ceo-finovasolutions/done-for-you-service-finova-solutions

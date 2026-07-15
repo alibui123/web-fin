@@ -1,0 +1,115 @@
+﻿
+> finova-website-main\components\about.tsx:58:              <h2 className="finova-heading mb-2 
+finova-text-gradient">About Finova Solutions</h2>
+  finova-website-main\components\about.tsx:59:              <div className="w-16 md:w-20 h-1 finova-gradient 
+rounded-full mb-4 md:mb-6" />
+> finova-website-main\components\about.tsx:81:            <h2 className="finova-heading mb-2 finova-text-gradient">Our 
+Purpose</h2>
+  finova-website-main\components\about.tsx:82:            <div className="w-16 md:w-20 h-1 finova-gradient 
+rounded-full mx-auto" />
+> finova-website-main\components\become-partner.tsx:17:          <h2 className="text-3xl font-bold mb-4">Become a 
+Partner</h2>
+  finova-website-main\components\become-partner.tsx:18:          <p className="text-lg text-foreground/70 mb-8">
+> finova-website-main\components\blog-section.tsx:178:          <h2 className="text-5xl sm:text-6xl md:text-7xl 
+font-black mb-6 uppercase tracking-tighter text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+  finova-website-main\components\blog-section.tsx:179:            Latest Insights
+> finova-website-main\components\consultation-booking.tsx:182:                  <h2 className="text-2xl md:text-3xl 
+font-bold text-finova-teal mb-2">
+  finova-website-main\components\consultation-booking.tsx:183:                    Tell Us About You
+> finova-website-main\components\consultation-booking.tsx:268:                  <h2 className="text-2xl md:text-3xl 
+font-bold text-finova-blue mb-2">
+  finova-website-main\components\consultation-booking.tsx:269:                    What Are We Solving?
+> finova-website-main\components\consultation-booking.tsx:338:                  <h2 className="text-2xl md:text-3xl 
+font-bold text-finova-lightBlue mb-2">
+  finova-website-main\components\consultation-booking.tsx:339:                    Complete Your Booking
+> finova-website-main\components\contact-modern.tsx:72:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Get in Touch</h2>
+  finova-website-main\components\contact-modern.tsx:73:          <p className="text-xl text-foreground/80 max-w-3xl 
+mx-auto">
+> finova-website-main\components\contact.tsx:104:          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold 
+mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
+  finova-website-main\components\contact.tsx:105:            Get in Touch
+> finova-website-main\components\faq.tsx:192:          <h2 className="text-5xl sm:text-6xl md:text-7xl font-black mb-6 
+uppercase tracking-tighter text-white">
+  finova-website-main\components\faq.tsx:193:            <span className="block 
+drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">System</span>
+> finova-website-main\components\featured-partnerships.tsx:34:          <h2 className="text-3xl font-bold 
+mb-4">Featured Partnerships</h2>
+  finova-website-main\components\featured-partnerships.tsx:35:          <p className="text-foreground/70">
+> finova-website-main\components\flagship-products.tsx:172:                <h2 className="text-5xl sm:text-6xl 
+md:text-7xl font-black mb-4 uppercase tracking-tighter text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+  finova-website-main\components\flagship-products.tsx:173:                  {product.title}
+> finova-website-main\components\footer.tsx:109:                  <h2 className="text-4xl md:text-5xl font-black 
+leading-[1.1] tracking-tight text-white mb-6 uppercase">
+  finova-website-main\components\footer.tsx:110:                    Let's Build <br />
+> finova-website-main\components\home-contact.tsx:152:          <h2 className="text-5xl sm:text-6xl md:text-7xl 
+font-black mb-6 uppercase tracking-tighter text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+  finova-website-main\components\home-contact.tsx:153:            Establish Link
+> finova-website-main\components\integrations.tsx:35:          <h2 className="text-3xl font-bold mb-4">Our Tech 
+Stack</h2>
+  finova-website-main\components\integrations.tsx:36:          <p className="text-foreground/70">
+> finova-website-main\components\newsletter.tsx:48:            <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Stay Updated with Tech Trends</h2>
+  finova-website-main\components\newsletter.tsx:49:
+> finova-website-main\components\portfolio-showcase.tsx:567:            <h2 className="text-4xl md:text-5xl font-bold 
+mb-4">
+  finova-website-main\components\portfolio-showcase.tsx:568:              What We've{" "}
+> finova-website-main\components\portfolio-showcase.tsx:598:            <h2 className="text-4xl md:text-5xl font-bold 
+mb-4">
+  finova-website-main\components\portfolio-showcase.tsx:599:              Case Studies &amp;{" "}
+> finova-website-main\components\portfolio-showcase.tsx:662:            <h2 className="text-4xl md:text-5xl font-bold 
+mb-4">
+  finova-website-main\components\portfolio-showcase.tsx:663:              Technology We{" "}
+> finova-website-main\components\portfolio-showcase.tsx:717:              <h2 className="text-4xl md:text-5xl 
+font-bold mb-5">
+  finova-website-main\components\portfolio-showcase.tsx:718:                Ready to build something{" "}
+> finova-website-main\components\product-comparison.tsx:34:          <h2 className="text-3xl font-bold mb-4">Use 
+Cases</h2>
+  finova-website-main\components\product-comparison.tsx:35:          <p className="text-foreground/70">
+> finova-website-main\components\products-list.tsx:324:                  <h2 className="text-xl sm:text-2xl 
+md:text-3xl lg:text-4xl font-bold tracking-tight mb-2">{product.title}</h2>
+  finova-website-main\components\products-list.tsx:325:                  <div className={`h-1 w-20 rounded-full 
+bg-gradient-to-r ${product.gradient}`} />
+> finova-website-main\components\projects-modern.tsx:67:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Our Projects</h2>
+  finova-website-main\components\projects-modern.tsx:68:          <p className="text-xl text-foreground/80 max-w-3xl 
+mx-auto">
+> finova-website-main\components\projects.tsx:54:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600">
+  finova-website-main\components\projects.tsx:55:            Our Projects
+> finova-website-main\components\services-modern.tsx:148:          <h2 className="text-4xl sm:text-5xl md:text-6xl 
+font-black mb-6 uppercase tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+  finova-website-main\components\services-modern.tsx:149:            Engineering Matrix
+> finova-website-main\components\services.tsx:57:              <h2 className="text-2xl sm:text-3xl md:text-4xl 
+lg:text-5xl font-bold text-cyan-300 mb-4 sm:mb-6">Our Services</h2>
+  finova-website-main\components\services.tsx:58:              <p className="text-gray-300 max-w-3xl text-base 
+sm:text-lg">
+> finova-website-main\components\services.tsx:118:            <h2 className="text-2xl sm:text-3xl md:text-4xl 
+lg:text-5xl font-bold text-cyan-300 mb-4 sm:mb-6">Our Services</h2>
+  finova-website-main\components\services.tsx:119:            <p className="text-gray-300 max-w-3xl text-base 
+sm:text-lg">
+> finova-website-main\components\social-links.tsx:16:          <h2 className="text-3xl font-bold mb-4">Connect With 
+Us</h2>
+  finova-website-main\components\social-links.tsx:17:          <p className="text-foreground/70 mb-8">
+> finova-website-main\components\stats.tsx:81:          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black 
+mb-4 sm:mb-6 uppercase tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+  finova-website-main\components\stats.tsx:82:            System Impact
+> finova-website-main\components\team-directory.tsx:124:                            <h2 className="text-2xl font-bold 
+mb-1">{member.name}</h2>
+  finova-website-main\components\team-directory.tsx:125:                            <p className={`text-sm 
+font-semibold bg-clip-text text-transparent bg-gradient-to-r ${member.gradient}`}>
+> finova-website-main\components\team-showcase.tsx:135:          <h2 className="text-3xl sm:text-4xl md:text-5xl 
+font-bold mb-4">
+  finova-website-main\components\team-showcase.tsx:136:            Meet Our
+> finova-website-main\components\tech-stack-modern.tsx:82:          <h2 className="text-3xl md:text-4xl font-bold mb-4 
+finova-text-gradient">Our Tech Stack</h2>
+  finova-website-main\components\tech-stack-modern.tsx:83:          <p className="text-xl text-foreground/80 max-w-3xl 
+mx-auto">
+> finova-website-main\components\tech-stack.tsx:58:          <h2 className="text-4xl sm:text-5xl md:text-6xl 
+font-black mb-6 uppercase tracking-tighter text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+  finova-website-main\components\tech-stack.tsx:59:            Technical Foundation
+> finova-website-main\components\why-finova.tsx:46:          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold 
+mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-600">
+  finova-website-main\components\why-finova.tsx:47:            Why Choose Finova?
+
+

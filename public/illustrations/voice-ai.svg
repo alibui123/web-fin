@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="80" fill="url(#bg-gradient)" opacity="0.1"/>
+  
+  <!-- Microphone Body -->
+  <rect x="80" y="60" width="40" height="60" rx="20" fill="url(#mic-gradient)"/>
+  <path d="M70 100 C70 130 130 130 130 100" stroke="url(#mic-gradient)" stroke-width="4" fill="none"/>
+  <rect x="95" y="120" width="10" height="30" fill="url(#mic-gradient)"/>
+  <rect x="75" y="150" width="50" height="4" rx="2" fill="url(#mic-gradient)"/>
+  
+  <!-- Sound Waves -->
+  <g>
+    <!-- Inner Wave -->
+    <path d="M60 100 Q80 70 100 70 Q120 70 140 100 Q120 130 100 130 Q80 130 60 100Z" 
+          stroke="url(#wave-gradient)" stroke-width="2" fill="none" opacity="0.6">
+      <animate attributeName="d" 
+               values="M60 100 Q80 70 100 70 Q120 70 140 100 Q120 130 100 130 Q80 130 60 100Z;
+                       M60 100 Q80 80 100 80 Q120 80 140 100 Q120 120 100 120 Q80 120 60 100Z;
+                       M60 100 Q80 70 100 70 Q120 70 140 100 Q120 130 100 130 Q80 130 60 100Z"
+               dur="2s" repeatCount="indefinite"/>
+    </path>
+    
+    <!-- Middle Wave -->
+    <path d="M40 100 Q70 50 100 50 Q130 50 160 100 Q130 150 100 150 Q70 150 40 100Z" 
+          stroke="url(#wave-gradient)" stroke-width="2" fill="none" opacity="0.4">
+      <animate attributeName="d" 
+               values="M40 100 Q70 50 100 50 Q130 50 160 100 Q130 150 100 150 Q70 150 40 100Z;
+                       M40 100 Q70 65 100 65 Q130 65 160 100 Q130 135 100 135 Q70 135 40 100Z;
+                       M40 100 Q70 50 100 50 Q130 50 160 100 Q130 150 100 150 Q70 150 40 100Z"
+               dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    </path>
+    
+    <!-- Outer Wave -->
+    <path d="M20 100 Q60 30 100 30 Q140 30 180 100 Q140 170 100 170 Q60 170 20 100Z" 
+          stroke="url(#wave-gradient)" stroke-width="2" fill="none" opacity="0.2">
+      <animate attributeName="d" 
+               values="M20 100 Q60 30 100 30 Q140 30 180 100 Q140 170 100 170 Q60 170 20 100Z;
+                       M20 100 Q60 50 100 50 Q140 50 180 100 Q140 150 100 150 Q60 150 20 100Z;
+                       M20 100 Q60 30 100 30 Q140 30 180 100 Q140 170 100 170 Q60 170 20 100Z"
+               dur="2s" repeatCount="indefinite" begin="1s"/>
+    </path>
+  </g>
+  
+  <!-- Glowing Effect -->
+  <circle cx="100" cy="90" r="15" fill="url(#glow-gradient)" opacity="0.5">
+    <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <defs>
+    <linearGradient id="bg-gradient" x1="20" y1="20" x2="180" y2="180">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+    <linearGradient id="mic-gradient" x1="70" y1="60" x2="130" y2="150">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#14B8A6"/>
+    </linearGradient>
+    <linearGradient id="wave-gradient" x1="20" y1="100" x2="180" y2="100">
+      <stop offset="0%" stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+    <linearGradient id="glow-gradient" x1="85" y1="75" x2="115" y2="105">
+      <stop offset="0%" stop-color="#34D399" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg> 
