@@ -4,7 +4,7 @@ import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Play, Gauge } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 
 export default function FinalCta() {
   const ref = useRef(null)
@@ -71,7 +71,8 @@ export default function FinalCta() {
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-white text-black font-bold tracking-[0.15em] uppercase text-sm transition-all duration-300 hover:bg-finova-cyan hover:text-white"
+              onPointerUp={clearStickyCta}
+              className="group inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-white text-black font-bold tracking-[0.15em] uppercase text-sm transition-all duration-300 hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white"
             >
               Book a call
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -7,7 +7,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ChevronRight, Plus } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   howItWorksAudience,
   howItWorksFaqs,
@@ -57,7 +57,8 @@ function DualCtas({
         href={CALENDLY_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black text-sm font-bold tracking-[0.12em] uppercase transition-all duration-300 hover:bg-finova-cyan hover:text-white"
+        onPointerUp={clearStickyCta}
+        className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black text-sm font-bold tracking-[0.12em] uppercase transition-all duration-300 hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white"
       >
         {primaryLabel}
         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
@@ -287,10 +288,28 @@ function Model() {
 
 function Stages() {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-40px" })
+  const isInView = useInView(ref, { once: false, margin: "-40px" })
   const [active, setActive] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
   const stage = howItWorksStages[active]
   const Icon = stage.icon
+  const AUTO_MS = 4500
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)")
+    const sync = () => setIsMobile(mq.matches)
+    sync()
+    mq.addEventListener("change", sync)
+    return () => mq.removeEventListener("change", sync)
+  }, [])
+
+  useEffect(() => {
+    if (!isInView || !isMobile) return
+    const id = window.setInterval(() => {
+      setActive((n) => (n + 1) % howItWorksStages.length)
+    }, AUTO_MS)
+    return () => window.clearInterval(id)
+  }, [isInView, isMobile, active])
 
   return (
     <section ref={ref} className="relative py-20 md:py-28 border-b border-white/5 overflow-hidden">
@@ -300,12 +319,13 @@ function Stages() {
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-12 max-w-3xl"
+          className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-10 md:mb-12 max-w-3xl"
         >
           {howItWorksStagesHeading}
         </motion.h2>
 
-        <div className="mb-8 overflow-x-auto pb-2 -mx-4 px-4">
+        {/* Desktop / tablet: stage pills */}
+        <div className="mb-8 hidden overflow-x-auto pb-2 -mx-4 px-4 md:block">
           <div className="flex min-w-max gap-2 md:gap-3 md:min-w-0 md:flex-wrap">
             {howItWorksStages.map((s, i) => (
               <button
@@ -334,24 +354,24 @@ function Stages() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-transparent p-7 md:p-12 overflow-hidden"
+            className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-transparent p-6 sm:p-7 md:p-12 overflow-hidden"
           >
             <div
               className={`absolute -right-16 -top-16 w-72 h-72 rounded-full bg-gradient-to-br ${stage.accent} opacity-[0.12] blur-3xl pointer-events-none`}
             />
-            <div className="relative grid md:grid-cols-12 gap-8">
+            <div className="relative grid md:grid-cols-12 gap-6 md:gap-8">
               <div className="md:col-span-4">
                 <div
-                  className={`mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${stage.accent}`}
+                  className={`mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${stage.accent} md:h-14 md:w-14`}
                 >
-                  <Icon className="w-7 h-7 text-white" />
+                  <Icon className="w-6 h-6 text-white md:w-7 md:h-7" />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-snug">
+                <h3 className="text-xl font-bold text-white tracking-tight leading-snug sm:text-2xl md:text-3xl">
                   {stage.label} {stage.title} {stage.timing}
                 </h3>
               </div>
               <div className="md:col-span-8">
-                <p className="text-white/65 text-base md:text-lg font-light leading-relaxed">
+                <p className="text-white/65 text-[15px] md:text-lg font-light leading-relaxed">
                   <MultiLinkedText
                     text={stage.body}
                     links={[
@@ -363,15 +383,46 @@ function Stages() {
               </div>
             </div>
 
-            <div className="relative mt-10 flex gap-1.5">
-              {howItWorksStages.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-                    i <= active ? "bg-finova-cyan" : "bg-white/10"
-                  }`}
-                />
-              ))}
+            {/* Progress / nav bars — primary control on mobile */}
+            <div
+              className="relative mt-8 flex gap-1.5 md:mt-10"
+              role="tablist"
+              aria-label="Stages"
+            >
+              {howItWorksStages.map((s, i) => {
+                const isActive = i === active
+                const isDone = i < active
+                return (
+                  <button
+                    key={s.title}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-label={`${s.label} ${s.title}`}
+                    onClick={() => setActive(i)}
+                    className="group relative flex h-8 flex-1 items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-finova-cyan md:h-6"
+                  >
+                    <span className="relative h-1.5 w-full overflow-hidden rounded-full bg-white/10 md:h-1">
+                      {isDone ? (
+                        <span className="absolute inset-0 rounded-full bg-finova-cyan" />
+                      ) : null}
+                      {isActive ? (
+                        isMobile && isInView ? (
+                          <motion.span
+                            key={`fill-${active}`}
+                            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-finova-cyan to-finova-lightBlue"
+                            initial={{ width: "0%" }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: AUTO_MS / 1000, ease: "linear" }}
+                          />
+                        ) : (
+                          <span className="absolute inset-0 rounded-full bg-finova-cyan" />
+                        )
+                      ) : null}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
           </motion.article>
         </AnimatePresence>

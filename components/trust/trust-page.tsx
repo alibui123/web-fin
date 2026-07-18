@@ -33,7 +33,7 @@ import {
   Megaphone,
   Split,
 } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   trustAudience,
   trustCompliance,
@@ -201,7 +201,7 @@ function MagneticButton({
   }
 
   const primary =
-    "group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white will-change-transform"
+    "group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white will-change-transform"
   const secondary =
     "group inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.03] px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-white transition-colors hover:border-finova-cyan/50 hover:bg-finova-cyan/10 will-change-transform"
 
@@ -212,6 +212,7 @@ function MagneticButton({
       x.set(0)
       y.set(0)
     },
+    onPointerUp: clearStickyCta,
     style: { x: springX, y: springY },
     className: variant === "primary" ? primary : secondary,
   }

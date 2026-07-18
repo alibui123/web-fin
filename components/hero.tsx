@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Play } from "lucide-react"
 import dynamic from "next/dynamic"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 
 const TechCore3D = dynamic(() => import("@/components/tech-core-3d"), {
   ssr: false,
@@ -16,6 +16,7 @@ function BookCallButton() {
       href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
+      onPointerUp={clearStickyCta}
       className="group relative inline-flex w-full sm:w-auto"
     >
       <span
@@ -27,7 +28,7 @@ function BookCallButton() {
         className="pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-r from-finova-cyan/35 to-finova-magenta/35 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-60"
       />
 
-      <span className="relative inline-flex h-[52px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-white px-8 text-sm font-bold uppercase tracking-[0.15em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white sm:w-auto">
+      <span className="relative inline-flex h-[52px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-white px-8 text-sm font-bold uppercase tracking-[0.15em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white active:bg-[#0b1228] active:text-white sm:w-auto">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"

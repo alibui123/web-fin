@@ -6,7 +6,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ChevronRight, Plus } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   pricingAlwaysTrue,
   pricingAudience,
@@ -36,6 +36,7 @@ function BookCallButton({ label }: { label: string }) {
       href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
+      onPointerUp={clearStickyCta}
       className="group relative inline-flex shrink-0"
     >
       <span
@@ -47,7 +48,7 @@ function BookCallButton({ label }: { label: string }) {
         className="pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-r from-finova-cyan/35 to-finova-magenta/35 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-60"
       />
 
-      <span className="relative inline-flex h-[52px] shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-3.5 text-[10px] font-bold uppercase tracking-[0.1em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white sm:gap-2.5 sm:px-7 sm:text-sm sm:tracking-[0.15em]">
+      <span className="relative inline-flex h-[52px] shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-3.5 text-[10px] font-bold uppercase tracking-[0.1em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white active:bg-[#0b1228] active:text-white sm:gap-2.5 sm:px-7 sm:text-sm sm:tracking-[0.15em]">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"

@@ -21,7 +21,7 @@ import {
   Truck,
   Wrench,
 } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   industriesCore,
   industriesEmerging,
@@ -163,6 +163,7 @@ function BookCallButton({ label }: { label: string }) {
       href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
+      onPointerUp={clearStickyCta}
       className="group relative inline-flex shrink-0"
     >
       <span
@@ -174,7 +175,7 @@ function BookCallButton({ label }: { label: string }) {
         className="pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-r from-finova-cyan/35 to-finova-magenta/35 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-60"
       />
 
-      <span className="relative inline-flex h-[52px] shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-3.5 text-[10px] font-bold uppercase tracking-[0.1em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white sm:gap-2.5 sm:px-7 sm:text-sm sm:tracking-[0.15em]">
+      <span className="relative inline-flex h-[52px] shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-3.5 text-[10px] font-bold uppercase tracking-[0.1em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white active:bg-[#0b1228] active:text-white sm:gap-2.5 sm:px-7 sm:text-sm sm:tracking-[0.15em]">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
@@ -238,7 +239,7 @@ function MagneticButton({
   }
 
   const primary =
-    "group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white will-change-transform"
+    "group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white will-change-transform"
   const secondary =
     "group inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.03] px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-white transition-colors hover:border-finova-cyan/50 hover:bg-finova-cyan/10 will-change-transform"
 
@@ -249,6 +250,7 @@ function MagneticButton({
       x.set(0)
       y.set(0)
     },
+    onPointerUp: clearStickyCta,
     style: { x: springX, y: springY },
     className: variant === "primary" ? primary : secondary,
   }

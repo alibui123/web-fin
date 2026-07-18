@@ -6,7 +6,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ChevronRight, Plus, Play } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   agentDevAudience,
   agentDevFaqs,
@@ -38,6 +38,7 @@ function BookCallButton({ label }: { label: string }) {
       href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
+      onPointerUp={clearStickyCta}
       className="group relative inline-flex w-full sm:w-auto"
     >
       <span
@@ -49,7 +50,7 @@ function BookCallButton({ label }: { label: string }) {
         className="pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-r from-finova-cyan/35 to-finova-magenta/35 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-60"
       />
 
-      <span className="relative inline-flex h-[52px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-white px-8 text-sm font-bold uppercase tracking-[0.15em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white sm:w-auto">
+      <span className="relative inline-flex h-[52px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-full bg-white px-8 text-sm font-bold uppercase tracking-[0.15em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white active:bg-[#0b1228] active:text-white sm:w-auto">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
@@ -75,19 +76,21 @@ function DualCtas({
   className?: string
 }) {
   return (
-    <div className={`inline-flex flex-col items-center gap-3 ${className}`}>
-      <div className="flex w-full flex-col sm:w-auto sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+    <div
+      className={`mx-auto flex w-full max-w-md flex-col items-center gap-3 sm:mx-0 sm:inline-flex sm:w-auto sm:max-w-none sm:items-start ${className}`}
+    >
+      <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
         <BookCallButton label={primaryLabel} />
         <Link
           href={secondaryHref}
-          className="group inline-flex h-[52px] items-center justify-center gap-3 px-8 rounded-full border border-white/20 bg-white/[0.03] text-white text-sm font-bold tracking-[0.15em] uppercase transition-all duration-300 hover:border-finova-cyan/50 hover:bg-finova-cyan/10 backdrop-blur-sm"
+          className="group inline-flex h-[52px] items-center justify-center gap-3 whitespace-nowrap rounded-full border border-white/20 bg-white/[0.03] px-8 text-sm font-bold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:border-finova-cyan/50 hover:bg-finova-cyan/10 backdrop-blur-sm"
         >
           <Play className="h-4 w-4 text-finova-cyan fill-finova-cyan/30" />
           {secondaryLabel}
         </Link>
       </div>
       {micro ? (
-        <p className="max-w-sm text-center text-xs font-light leading-relaxed text-white/45 sm:text-[13px]">
+        <p className="max-w-sm text-center text-xs font-light leading-relaxed text-white/45 sm:text-left sm:text-[13px]">
           {micro}
         </p>
       ) : null}
@@ -260,7 +263,7 @@ function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.65, delay: 0.35, ease }}
-            className="mt-10"
+            className="mt-10 flex w-full justify-center sm:justify-start"
           >
             <DualCtas
               primaryLabel={agentDevHero.primaryCta}
@@ -415,18 +418,18 @@ function Problem() {
         {/* demo → gap → production bridge */}
         <div
           data-agent-problem-y
-          className="mt-10 flex flex-wrap items-center gap-3 md:mt-14 md:gap-4"
+          className="mt-10 flex flex-nowrap items-center gap-1.5 sm:gap-3 md:mt-14 md:gap-4"
           aria-hidden
         >
-          <span className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white/35 line-through decoration-white/25">
+          <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/35 line-through decoration-white/25 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
             demo
           </span>
-          <span className="h-px min-w-[2rem] flex-1 bg-gradient-to-r from-white/20 via-finova-magenta/50 to-finova-cyan/40 md:min-w-[4rem]" />
-          <span className="rounded-full border border-finova-magenta/40 bg-finova-magenta/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-finova-magenta">
+          <span className="h-px min-w-[0.75rem] flex-1 bg-gradient-to-r from-white/20 via-finova-magenta/50 to-finova-cyan/40 sm:min-w-[2rem] md:min-w-[4rem]" />
+          <span className="shrink-0 whitespace-nowrap rounded-full border border-finova-magenta/40 bg-finova-magenta/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-finova-magenta sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
             the gap
           </span>
-          <span className="h-px min-w-[2rem] flex-1 bg-gradient-to-r from-finova-magenta/40 via-finova-cyan/50 to-finova-cyan/30 md:min-w-[4rem]" />
-          <span className="rounded-full border border-finova-cyan/40 bg-finova-cyan/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-finova-cyan">
+          <span className="h-px min-w-[0.75rem] flex-1 bg-gradient-to-r from-finova-magenta/40 via-finova-cyan/50 to-finova-cyan/30 sm:min-w-[2rem] md:min-w-[4rem]" />
+          <span className="shrink-0 whitespace-nowrap rounded-full border border-finova-cyan/40 bg-finova-cyan/10 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-finova-cyan sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
             production
           </span>
         </div>

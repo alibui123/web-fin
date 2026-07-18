@@ -6,7 +6,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ChevronRight, Plus } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   consultingAudience,
   consultingAudit,
@@ -35,7 +35,8 @@ function BookCallButton({ label }: { label: string }) {
       href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative inline-flex shrink-0"
+      onPointerUp={clearStickyCta}
+      className="group relative inline-flex w-full sm:w-auto sm:shrink-0"
     >
       <span
         aria-hidden
@@ -46,7 +47,7 @@ function BookCallButton({ label }: { label: string }) {
         className="pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-r from-finova-cyan/35 to-finova-magenta/35 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-60"
       />
 
-      <span className="relative inline-flex h-[52px] shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-4 text-[10px] font-bold uppercase tracking-[0.1em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white sm:gap-2.5 sm:px-7 sm:text-sm sm:tracking-[0.15em]">
+      <span className="relative inline-flex h-[52px] w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-5 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white active:bg-[#0b1228] active:text-white sm:w-auto sm:gap-2.5 sm:px-7 sm:text-sm sm:tracking-[0.15em]">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
@@ -70,12 +71,14 @@ function DualCtas({
   className?: string
 }) {
   return (
-    <div className={`inline-flex flex-col items-center gap-3 ${className}`}>
-      <div className="flex flex-nowrap items-center gap-2 sm:gap-4">
+    <div
+      className={`mx-auto flex w-full max-w-md flex-col items-center gap-3 sm:mx-0 sm:inline-flex sm:w-auto sm:max-w-none sm:items-start ${className}`}
+    >
+      <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
         <BookCallButton label={primaryLabel} />
         <Link
           href={secondaryHref}
-          className="inline-flex h-[52px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/20 bg-white/[0.03] px-3.5 text-[10px] font-bold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:border-finova-cyan/50 hover:bg-finova-cyan/10 backdrop-blur-sm sm:px-7 sm:text-sm sm:tracking-[0.15em]"
+          className="inline-flex h-[52px] items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/20 bg-white/[0.03] px-5 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:border-finova-cyan/50 hover:bg-finova-cyan/10 backdrop-blur-sm sm:px-7 sm:text-sm sm:tracking-[0.15em]"
         >
           {secondaryLabel}
         </Link>
@@ -183,35 +186,35 @@ function Hero() {
   const dotColors = ["bg-finova-magenta", "bg-finova-cyan"] as const
 
   return (
-    <section ref={ref} className="relative overflow-hidden border-b border-white/5">
+    <section ref={ref} className="relative overflow-x-clip border-b border-white/5">
       <div className="absolute inset-0 bg-finova-midnight" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_70%_0%,rgba(147,51,234,0.14),transparent_55%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_0%_80%,rgba(14,165,233,0.1),transparent_50%)] pointer-events-none" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 h-56 w-56 rounded-full bg-finova-magenta/10 blur-[100px]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-16 md:pt-36 md:pb-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-14 md:pt-36 md:pb-24">
         <Breadcrumb />
 
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-14">
           <motion.h1
             initial={{ opacity: 0, y: 28 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.75, ease }}
-            className="text-4xl font-bold tracking-tight text-white leading-[1.08] sm:text-5xl xl:text-[3.2rem] lg:col-span-5 lg:sticky lg:top-28"
+            className="text-[1.85rem] font-bold tracking-tight text-white leading-[1.12] sm:text-5xl xl:text-[3.2rem] lg:col-span-5 lg:sticky lg:top-28"
           >
             {consultingHero.h1Lead}
             <br />
             <span className="text-white/45">{consultingHero.h1Accent}</span>
           </motion.h1>
 
-          <div className="lg:col-span-7">
+          <div className="min-w-0 lg:col-span-7">
             {consultingHero.paragraphs.map((p, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 24 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.12 + i * 0.12, duration: 0.7, ease }}
-                className={`relative border-l py-7 pl-6 md:py-8 md:pl-8 ${
+                className={`relative border-l py-5 pl-5 sm:py-7 sm:pl-6 md:py-8 md:pl-8 ${
                   i === 0
                     ? "border-l-finova-magenta/45 pt-0"
                     : "border-l-finova-cyan/35"
@@ -219,9 +222,9 @@ function Hero() {
               >
                 <span
                   aria-hidden
-                  className={`absolute -left-[5px] top-8 h-2.5 w-2.5 rounded-full ${dotColors[i]}`}
+                  className={`absolute -left-[5px] top-6 h-2.5 w-2.5 rounded-full sm:top-8 ${dotColors[i]}`}
                 />
-                <p className="text-base font-light leading-relaxed text-white/65 md:text-lg">
+                <p className="text-[15px] font-light leading-relaxed text-white/65 md:text-lg">
                   {p}
                 </p>
               </motion.div>
@@ -231,13 +234,12 @@ function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.36, duration: 0.65, ease }}
-              className="mt-4 border-t border-white/10 pt-10 md:mt-2 md:pt-12"
+              className="mt-6 flex w-full justify-center border-t border-white/10 pt-8 sm:justify-start md:mt-2 md:pt-12"
             >
               <DualCtas
                 primaryLabel={consultingHero.primaryCta}
                 secondaryLabel={consultingHero.secondaryCta}
                 secondaryHref={consultingHero.secondaryHref}
-                className="items-start"
               />
             </motion.div>
           </div>

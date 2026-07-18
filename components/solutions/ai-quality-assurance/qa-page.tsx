@@ -6,7 +6,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ChevronRight, Plus, Play } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   qaAudience,
   qaBuyer,
@@ -36,7 +36,8 @@ function BookCallButton({ label }: { label: string }) {
       href={CALENDLY_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative inline-flex shrink-0"
+      onPointerUp={clearStickyCta}
+      className="group relative inline-flex w-full sm:w-auto sm:shrink-0"
     >
       <span
         aria-hidden
@@ -47,7 +48,7 @@ function BookCallButton({ label }: { label: string }) {
         className="pointer-events-none absolute -inset-2 rounded-full bg-gradient-to-r from-finova-cyan/35 to-finova-magenta/35 opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-60"
       />
 
-      <span className="relative inline-flex h-[52px] shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-5 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white sm:gap-2.5 sm:px-8 sm:text-sm sm:tracking-[0.15em]">
+      <span className="relative inline-flex h-[52px] w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full bg-white px-5 text-[11px] font-bold uppercase tracking-[0.12em] text-black transition-colors duration-300 group-hover:bg-[#0b1228] group-hover:text-white active:bg-[#0b1228] active:text-white sm:w-auto sm:gap-2.5 sm:px-8 sm:text-sm sm:tracking-[0.15em]">
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
@@ -75,12 +76,14 @@ function DualCtas({
   const isDemo = secondaryHref === "/#demo"
 
   return (
-    <div className={`inline-flex flex-col items-center gap-3 ${className}`}>
-      <div className="flex flex-nowrap items-center gap-2.5 sm:gap-4">
+    <div
+      className={`mx-auto flex w-full max-w-md flex-col items-center gap-3 sm:mx-0 sm:inline-flex sm:w-auto sm:max-w-none sm:items-start ${className}`}
+    >
+      <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
         <BookCallButton label={primaryLabel} />
         <Link
           href={secondaryHref}
-          className="inline-flex h-[52px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/20 bg-white/[0.03] px-4 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:border-finova-cyan/50 hover:bg-finova-cyan/10 backdrop-blur-sm sm:gap-3 sm:px-8 sm:text-sm sm:tracking-[0.15em]"
+          className="inline-flex h-[52px] items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/20 bg-white/[0.03] px-5 text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-all duration-300 hover:border-finova-cyan/50 hover:bg-finova-cyan/10 backdrop-blur-sm sm:gap-3 sm:px-8 sm:text-sm sm:tracking-[0.15em]"
         >
           {isDemo ? (
             <Play className="h-3.5 w-3.5 text-finova-cyan fill-finova-cyan/30 sm:h-4 sm:w-4" />
@@ -89,7 +92,7 @@ function DualCtas({
         </Link>
       </div>
       {micro ? (
-        <p className="max-w-sm text-center text-xs font-light leading-relaxed text-white/45 sm:text-[13px]">
+        <p className="max-w-sm text-center text-xs font-light leading-relaxed text-white/45 sm:text-left sm:text-[13px]">
           {micro}
         </p>
       ) : null}
@@ -243,7 +246,7 @@ function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.4 }}
-          className="mt-10"
+          className="mt-10 flex w-full justify-center sm:justify-start"
         >
           <DualCtas
             primaryLabel={qaHero.primaryCta}
@@ -281,14 +284,43 @@ function Problem() {
         transformOrigin: "bottom center",
         scrollTrigger: { trigger: sectionRef.current, start: "top 62%", once: true },
       })
+      gsap.from("[data-drift-signal]", {
+        scaleX: 0,
+        duration: 0.85,
+        stagger: 0.14,
+        ease: "power3.out",
+        transformOrigin: "left center",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 68%", once: true },
+      })
     }, sectionRef)
     return () => ctx.revert()
   }, [])
 
+  const stepTone = [
+    {
+      text: "text-finova-cyan",
+      node: "border-finova-cyan/60 bg-finova-cyan/20 shadow-[0_0_18px_rgba(34,211,238,0.35)]",
+      bar: "from-finova-cyan/80 to-finova-cyan/10",
+      rail: "bg-gradient-to-b from-finova-cyan/50 to-finova-magenta/40",
+    },
+    {
+      text: "text-finova-magenta",
+      node: "border-finova-magenta/60 bg-finova-magenta/20 shadow-[0_0_18px_rgba(217,70,239,0.3)]",
+      bar: "from-finova-magenta/70 to-finova-magenta/10",
+      rail: "bg-gradient-to-b from-finova-magenta/45 to-white/15",
+    },
+    {
+      text: "text-white/40",
+      node: "border-white/25 bg-white/[0.06]",
+      bar: "from-white/25 to-white/[0.04]",
+      rail: "bg-transparent",
+    },
+  ] as const
+
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+      className="relative overflow-hidden border-b border-white/5 py-16 md:py-28"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_20%_10%,rgba(217,70,239,0.12),transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_90%_80%,rgba(14,165,233,0.08),transparent_50%)]" />
@@ -303,27 +335,65 @@ function Problem() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div data-qa-drift-y className="max-w-3xl">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.75rem] md:leading-[1.12]">
+          <h2 className="text-[1.85rem] font-bold leading-[1.15] tracking-tight text-white sm:text-4xl md:text-[2.75rem] md:leading-[1.12]">
             Agents rarely fail loudly.
             <br />
             <span className="bg-gradient-to-r from-finova-magenta via-finova-lightBlue to-finova-cyan bg-clip-text text-transparent">
               They drift quietly.
             </span>
           </h2>
-          <p className="mt-6 text-base font-light leading-relaxed text-white/60 md:mt-8 md:text-lg">
+          <p className="mt-5 text-[15px] font-light leading-relaxed text-white/60 md:mt-8 md:text-lg">
             {qaProblem.lead}
           </p>
         </div>
 
-        {/* Drift slope */}
+        {/* Mobile: descending signal cascade */}
         <div
           data-qa-drift-y
-          className="mt-12 grid items-end gap-4 sm:grid-cols-3 md:mt-16 md:gap-6"
+          className="mt-10 md:hidden"
+          aria-hidden
+        >
+          <div className="relative">
+            {qaProblem.driftSteps.map((step, i) => (
+              <div key={step.label} className="relative flex gap-4 pb-8 last:pb-0">
+                <div className="relative flex w-4 shrink-0 flex-col items-center">
+                  <span
+                    className={`mt-1.5 h-3 w-3 shrink-0 rounded-full border ${stepTone[i].node}`}
+                  />
+                  {i < qaProblem.driftSteps.length - 1 ? (
+                    <span
+                      className={`mt-2 w-px flex-1 ${stepTone[i].rail}`}
+                    />
+                  ) : null}
+                </div>
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <p
+                    className={`text-[13px] font-medium leading-snug tracking-wide ${stepTone[i].text}`}
+                  >
+                    {step.label}
+                  </p>
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+                    <div
+                      data-drift-signal
+                      className={`h-full origin-left rounded-full bg-gradient-to-r ${stepTone[i].bar}`}
+                      style={{ width: `${step.level}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: drift slope bars */}
+        <div
+          data-qa-drift-y
+          className="mt-16 hidden items-end gap-6 md:grid md:grid-cols-3"
           aria-hidden
         >
           {qaProblem.driftSteps.map((step, i) => (
             <div key={step.label} className="flex flex-col items-stretch gap-3">
-              <div className="flex h-36 items-end md:h-44">
+              <div className="flex h-44 items-end">
                 <div
                   data-drift-bar
                   className={`w-full rounded-t-xl origin-bottom ${
@@ -337,7 +407,7 @@ function Problem() {
                 />
               </div>
               <p
-                className={`text-xs font-medium leading-snug tracking-wide md:text-sm ${
+                className={`text-sm font-medium leading-snug tracking-wide ${
                   i === 0
                     ? "text-finova-cyan"
                     : i === 1
@@ -356,29 +426,32 @@ function Problem() {
           initial={{ opacity: 0, y: 12 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.65, delay: 0.1, ease }}
-          className="mt-8 max-w-2xl text-base font-medium leading-relaxed text-white/75 md:mt-10 md:text-lg"
+          className="mt-6 border-l-2 border-finova-magenta/50 pl-4 text-[15px] font-medium leading-relaxed text-white/80 md:mt-10 md:max-w-2xl md:border-l-0 md:pl-0 md:text-lg md:text-white/75"
         >
           {qaProblem.damage}
         </motion.p>
 
-        {/* Why + risk */}
-        <div data-qa-drift-y className="mt-10 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-5">
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+        {/* Why + risk — open cascade on mobile, cards on desktop */}
+        <div
+          data-qa-drift-y
+          className="mt-10 space-y-0 md:mt-14 md:grid md:grid-cols-2 md:gap-5 md:space-y-0"
+        >
+          <div className="relative border-t border-white/10 py-6 md:overflow-hidden md:rounded-[1.5rem] md:border md:border-white/10 md:bg-white/[0.03] md:p-8 md:py-8">
             <div
               aria-hidden
-              className="mb-5 h-px w-12 bg-gradient-to-r from-white/35 to-transparent"
+              className="mb-4 h-px w-10 bg-gradient-to-r from-white/35 to-transparent md:mb-5 md:w-12"
             />
-            <p className="text-base font-light leading-relaxed text-white/60 md:text-lg">
+            <p className="text-[15px] font-light leading-relaxed text-white/60 md:text-lg">
               {qaProblem.why}
             </p>
           </div>
 
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-finova-magenta/30 bg-gradient-to-br from-finova-magenta/[0.12] via-finova-magenta/[0.04] to-transparent p-6 md:p-8">
+          <div className="relative border-t border-finova-magenta/25 py-6 md:overflow-hidden md:rounded-[1.5rem] md:border md:border-finova-magenta/30 md:bg-gradient-to-br md:from-finova-magenta/[0.12] md:via-finova-magenta/[0.04] md:to-transparent md:p-8 md:py-8">
             <div
               aria-hidden
-              className="mb-5 h-px w-12 bg-gradient-to-r from-finova-magenta to-transparent"
+              className="mb-4 h-px w-10 bg-gradient-to-r from-finova-magenta to-transparent md:mb-5 md:w-12"
             />
-            <p className="text-base font-medium leading-relaxed text-white/85 md:text-lg">
+            <p className="text-[15px] font-medium leading-relaxed text-white/85 md:text-lg">
               {qaProblem.risk}
             </p>
           </div>
@@ -387,15 +460,15 @@ function Problem() {
         {/* The fix */}
         <div
           data-qa-drift-y
-          className="relative mt-4 overflow-hidden rounded-[1.5rem] border border-finova-cyan/25 md:mt-5"
+          className="relative mt-0 border-t border-finova-cyan/30 pt-6 md:mt-5 md:overflow-hidden md:rounded-[1.5rem] md:border md:border-finova-cyan/25 md:pt-0"
         >
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-finova-cyan/10 via-transparent to-finova-magenta/10" />
-          <div className="relative flex gap-5 p-6 md:gap-8 md:p-9 lg:p-10">
+          <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-br from-finova-cyan/10 via-transparent to-finova-magenta/10 md:block" />
+          <div className="relative flex gap-4 md:gap-8 md:p-9 lg:p-10">
             <span
               aria-hidden
-              className="mt-1 hidden w-[3px] shrink-0 rounded-full bg-gradient-to-b from-finova-cyan via-finova-lightBlue to-finova-magenta sm:block"
+              className="mt-1 w-[2px] shrink-0 rounded-full bg-gradient-to-b from-finova-cyan via-finova-lightBlue to-finova-magenta md:w-[3px]"
             />
-            <p className="text-base font-light leading-relaxed text-white/70 md:text-lg">
+            <p className="text-[15px] font-light leading-relaxed text-white/70 md:text-lg">
               {qaProblem.fix}
             </p>
           </div>

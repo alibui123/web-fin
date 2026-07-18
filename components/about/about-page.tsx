@@ -14,7 +14,7 @@ import {
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ArrowUpRight, ChevronRight } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   aboutCredibility,
   aboutExists,
@@ -165,9 +165,10 @@ function MagneticButton({
       x.set(0)
       y.set(0)
     },
+    onPointerUp: clearStickyCta,
     style: { x: springX, y: springY },
     className:
-      "group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white will-change-transform",
+      "group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white will-change-transform",
   }
 
   if (external) {
@@ -772,16 +773,21 @@ function Credibility() {
 
         <div
           data-cred
-          className="mx-auto mt-8 flex max-w-4xl flex-wrap items-center justify-center gap-2.5 md:mt-10 md:gap-3"
+          className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-2 sm:mt-10 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-2.5 md:gap-3"
         >
-          {markers.map((label) => (
-            <span
-              key={label}
-              className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-[11px] font-medium tracking-wide text-white/55 md:text-xs"
-            >
-              {label}
-            </span>
-          ))}
+          {markers.map((label, i) => {
+            const isWide = i === 0 || i === markers.length - 1
+            return (
+              <span
+                key={label}
+                className={`flex min-h-[3rem] items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-3 py-2 text-center text-[11px] font-medium leading-snug tracking-wide text-white/55 sm:min-h-0 sm:px-3.5 sm:py-1.5 sm:text-left md:text-xs ${
+                  isWide ? "col-span-2 sm:col-auto" : ""
+                }`}
+              >
+                {label}
+              </span>
+            )
+          })}
         </div>
       </Container>
     </section>

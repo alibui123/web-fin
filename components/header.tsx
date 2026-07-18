@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ChevronDown, Users, FileText, ArrowRight, Bot, ShieldCheck, Cpu, HeartPulse, Wrench, Sparkles, Database, ClipboardList, Mail, Building2, Landmark } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronDown, Users, FileText, ArrowRight, Bot, ShieldCheck, Cpu, HeartPulse, Wrench, Sparkles, Database, ClipboardList, Mail, Building2, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { CALENDLY_URL } from "@/lib/site";
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 
 // Magnetic Button Component
 function MagneticButton({ children, href, className, external }: { children: React.ReactNode, href: string, className?: string, external?: boolean }) {
@@ -48,7 +48,7 @@ function MagneticButton({ children, href, className, external }: { children: Rea
 
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
+      <a href={href} target="_blank" rel="noopener noreferrer" onPointerUp={clearStickyCta}>
         {inner}
       </a>
     );
@@ -70,7 +70,12 @@ export default function Header() {
   const [mobileSolutionsOpen, setMobileSolutionsOpen] = useState(false);
   const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   const solutionsMenu = [
     { name: "Workflow automation", description: "End-to-end chains inside your systems", href: "/solutions/workflow-automation", icon: <Cpu className="h-6 w-6" /> },
@@ -138,6 +143,12 @@ export default function Header() {
     setMobileResourcesOpen(false);
   };
 
+  const openMobileSection = (section: "solutions" | "industries" | "resources" | null) => {
+    setMobileSolutionsOpen(section === "solutions");
+    setMobileIndustriesOpen(section === "industries");
+    setMobileResourcesOpen(section === "resources");
+  };
+
   const menuContainerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -156,17 +167,17 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-500 font-mono text-sm uppercase tracking-widest",
-        isScrolled
-          ? "bg-black/40 backdrop-blur-3xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+        "fixed top-0 w-full transition-all duration-500 font-mono text-sm uppercase tracking-widest",
+        mobileMenuOpen ? "z-[110]" : "z-50",
+        isScrolled || mobileMenuOpen
+          ? "bg-black/50 backdrop-blur-3xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
           : "bg-transparent py-6",
-        mobileMenuOpen ? "bg-finova-midnight/95 backdrop-blur-2xl" : "",
       )}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 md:px-12 flex items-center min-h-[60px] relative">
-        <Link href="/" className="flex items-center gap-2 relative z-[60]" prefetch={true}>
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between min-h-[60px] relative">
+        <Link href="/" className="flex items-center gap-2 relative z-[60]" prefetch={true} onClick={handleMobileNavClick}>
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
             <div className="relative h-10 w-40">
               <Image
@@ -182,8 +193,8 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="flex-1 flex justify-center">
-          <nav className="hidden md:flex items-center gap-8">
+        <div className="flex-1 hidden md:flex justify-center">
+          <nav className="flex items-center gap-8">
             {navItems.map((item, index) => {
               const isDropdown = item.name === "Solutions" || item.name === "Industries" || item.name === "Resources";
               let isOpen = false;
@@ -350,134 +361,214 @@ export default function Header() {
           </MagneticButton>
         </motion.div>
 
-        {/* Mobile Menu Button */}
-        <div className="flex items-center gap-4 md:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-            className="relative z-[60] text-white hover:bg-white/10"
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-        </div>
+        {/* Mobile hamburger — morphing lines */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+          className="relative z-[60] md:hidden flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] backdrop-blur-md transition-colors hover:border-finova-cyan/40 hover:bg-finova-cyan/10"
+        >
+          <span className="relative block h-3.5 w-5" aria-hidden>
+            <span
+              className={cn(
+                "absolute left-0 top-0 h-[1.5px] w-full origin-center rounded-full bg-white transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                mobileMenuOpen && "top-[6px] rotate-45 bg-finova-cyan"
+              )}
+            />
+            <span
+              className={cn(
+                "absolute left-0 top-[6px] h-[1.5px] w-full rounded-full bg-white transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                mobileMenuOpen && "scale-x-0 opacity-0"
+              )}
+            />
+            <span
+              className={cn(
+                "absolute left-0 top-[12px] h-[1.5px] w-full origin-center rounded-full bg-white transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                mobileMenuOpen && "top-[6px] -rotate-45 bg-finova-cyan"
+              )}
+            />
+          </span>
+        </button>
       </div>
 
-      {/* Mobile Navigation */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            animate={{ opacity: 1, backdropFilter: "blur(30px)" }}
-            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 w-full min-h-screen bg-black/90 z-[55] flex flex-col items-center justify-center overflow-y-auto"
-            style={{ top: "0", height: "100vh" }}
-          >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-finova-cyan/10 blur-[100px] rounded-full pointer-events-none" />
-
-            <nav className="flex flex-col items-center gap-8 py-20 w-full px-6 relative z-10">
-              {navItems.map((item, index) => {
-                const isDropdown = item.name === "Solutions" || item.name === "Industries" || item.name === "Resources";
-                let isOpen = false;
-                let setOpen: any = () => {};
-                let menuItems: any[] = [];
-
-                if (item.name === "Solutions") {
-                  isOpen = mobileSolutionsOpen;
-                  setOpen = setMobileSolutionsOpen;
-                  menuItems = solutionsMenu;
-                } else if (item.name === "Industries") {
-                  isOpen = mobileIndustriesOpen;
-                  setOpen = setMobileIndustriesOpen;
-                  menuItems = industriesMenu;
-                } else if (item.name === "Resources") {
-                  isOpen = mobileResourcesOpen;
-                  setOpen = setMobileResourcesOpen;
-                  menuItems = resourcesMenu;
-                }
-
-                if (isDropdown) {
-                  return (
-                    <motion.div
-                      key={item.name}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className="flex flex-col items-center w-full"
-                    >
-                      <button
-                        onClick={() => setOpen(!isOpen)}
-                        className="text-white/80 hover:text-white transition-colors text-3xl font-bold flex items-center gap-3 uppercase"
-                      >
-                        {item.name}
-                        <ChevronDown className={cn("h-6 w-6 transition-transform duration-300 text-finova-cyan", isOpen && "rotate-180")} />
-                      </button>
-                      <AnimatePresence>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                            className="flex flex-col items-center gap-4 mt-6 overflow-hidden w-full"
-                          >
-                            {menuItems.map((subItem) => (
-                              <Link
-                                key={subItem.href}
-                                href={subItem.href}
-                                prefetch={true}
-                                className="text-white/60 hover:text-finova-cyan transition-colors text-lg flex items-center gap-4 bg-white/[0.03] border border-white/10 w-full max-w-[320px] p-4 rounded-xl justify-center"
-                                onClick={handleMobileNavClick}
-                              >
-                                {subItem.icon && <span className="text-finova-cyan/70">{subItem.icon}</span>}
-                                {subItem.name}
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  );
-                }
-
-                return (
-                  <motion.div
-                    key={item.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <Link
-                      href={item.href}
-                      prefetch={true}
-                      className="text-white/80 hover:text-finova-cyan transition-colors text-3xl font-bold uppercase"
-                      onClick={handleMobileNavClick}
-                    >
-                      {item.name}
-                    </Link>
-                  </motion.div>
-                );
-              })}
-
+      {/* Mobile Navigation — portaled to body so header backdrop-blur does not trap fixed layout */}
+      {portalReady &&
+        createPortal(
+          <AnimatePresence>
+            {mobileMenuOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.6 }}
-                className="mt-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.28 }}
+                className="fixed inset-0 z-[100] md:hidden"
               >
-                <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" onClick={handleMobileNavClick}>
-                  <div className="px-10 py-4 bg-gradient-to-r from-finova-cyan to-finova-magenta rounded-full text-white font-bold tracking-widest text-sm shadow-[0_0_30px_rgba(217,70,239,0.3)] text-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
-                    <span className="relative z-10">BOOK A CALL</span>
-                  </div>
-                </a>
+                <button
+                  type="button"
+                  aria-label="Close menu backdrop"
+                  className="absolute inset-0 bg-finova-midnight/92 backdrop-blur-xl"
+                  onClick={handleMobileNavClick}
+                />
+
+                <motion.div
+                  initial={{ y: 28, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 16, opacity: 0 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-x-0 bottom-0 top-[64px] flex flex-col overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#0b1228] via-finova-midnight to-[#070b18]"
+                >
+                  <div className="pointer-events-none absolute -right-16 top-10 h-56 w-56 rounded-full bg-finova-cyan/15 blur-[90px]" />
+                  <div className="pointer-events-none absolute -left-20 bottom-24 h-64 w-64 rounded-full bg-finova-magenta/12 blur-[100px]" />
+
+                  <nav className="relative z-10 flex-1 overflow-y-auto overscroll-contain px-5 pb-6 pt-6">
+                    <p className="mb-5 text-[10px] font-bold tracking-[0.28em] text-white/35">
+                      Navigate
+                    </p>
+
+                    <ul className="space-y-0">
+                      {navItems.map((item, index) => {
+                        const isDropdown =
+                          item.name === "Solutions" ||
+                          item.name === "Industries" ||
+                          item.name === "Resources";
+                        let isOpen = false;
+                        let sectionKey: "solutions" | "industries" | "resources" | null = null;
+                        let menuItems: typeof solutionsMenu = [];
+
+                        if (item.name === "Solutions") {
+                          isOpen = mobileSolutionsOpen;
+                          sectionKey = "solutions";
+                          menuItems = solutionsMenu;
+                        } else if (item.name === "Industries") {
+                          isOpen = mobileIndustriesOpen;
+                          sectionKey = "industries";
+                          menuItems = industriesMenu;
+                        } else if (item.name === "Resources") {
+                          isOpen = mobileResourcesOpen;
+                          sectionKey = "resources";
+                          menuItems = resourcesMenu;
+                        }
+
+                        return (
+                          <motion.li
+                            key={item.name}
+                            initial={{ opacity: 0, x: -12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.05 + index * 0.05, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                            className="border-b border-white/10"
+                          >
+                            {isDropdown && sectionKey ? (
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <Link
+                                    href={item.href}
+                                    prefetch={true}
+                                    onClick={handleMobileNavClick}
+                                    className="flex-1 py-4 text-left text-[1.35rem] font-bold tracking-tight text-white"
+                                  >
+                                    {item.name}
+                                  </Link>
+                                  <button
+                                    type="button"
+                                    aria-label={`${isOpen ? "Collapse" : "Expand"} ${item.name}`}
+                                    aria-expanded={isOpen}
+                                    onClick={() => openMobileSection(isOpen ? null : sectionKey)}
+                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-finova-cyan transition-colors hover:border-finova-cyan/40"
+                                  >
+                                    <ChevronDown
+                                      className={cn(
+                                        "h-5 w-5 transition-transform duration-300",
+                                        isOpen && "rotate-180"
+                                      )}
+                                    />
+                                  </button>
+                                </div>
+
+                                <AnimatePresence initial={false}>
+                                  {isOpen && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                      className="overflow-hidden"
+                                    >
+                                      <div className="space-y-1.5 pb-4">
+                                        {menuItems.map((subItem) => (
+                                          <Link
+                                            key={subItem.href}
+                                            href={subItem.href}
+                                            prefetch={true}
+                                            onClick={handleMobileNavClick}
+                                            className="group flex items-start gap-3 rounded-xl border border-transparent bg-white/[0.02] px-3 py-3 transition-colors hover:border-white/10 hover:bg-white/[0.05]"
+                                          >
+                                            {subItem.icon && (
+                                              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-finova-cyan/80 transition-colors group-hover:border-finova-cyan/30 group-hover:text-finova-cyan">
+                                                {subItem.icon}
+                                              </span>
+                                            )}
+                                            <span className="min-w-0 flex-1">
+                                              <span className="block text-sm font-bold tracking-wide text-white/85 normal-case">
+                                                {subItem.name}
+                                              </span>
+                                              <span className="mt-0.5 block text-[11px] font-sans font-normal normal-case tracking-normal leading-snug text-white/40">
+                                                {subItem.description}
+                                              </span>
+                                            </span>
+                                            <ArrowRight className="mt-2 h-3.5 w-3.5 shrink-0 text-white/20 transition-all group-hover:translate-x-0.5 group-hover:text-finova-cyan" />
+                                          </Link>
+                                        ))}
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            ) : (
+                              <Link
+                                href={item.href}
+                                prefetch={true}
+                                onClick={handleMobileNavClick}
+                                className="flex items-center justify-between py-4 text-[1.35rem] font-bold tracking-tight text-white"
+                              >
+                                {item.name}
+                                <ArrowRight className="h-4 w-4 text-white/25" />
+                              </Link>
+                            )}
+                          </motion.li>
+                        );
+                      })}
+                    </ul>
+                  </nav>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.35 }}
+                    className="relative z-10 border-t border-white/10 bg-black/30 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 backdrop-blur-md"
+                  >
+                    <a
+                      href={CALENDLY_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={handleMobileNavClick}
+                      onPointerUp={clearStickyCta}
+                      className="group relative flex h-[52px] w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-white text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-[#0b1228] hover:text-white active:bg-[#0b1228] active:text-white"
+                    >
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+                      />
+                      <span className="relative">Book a call</span>
+                      <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </a>
+                  </motion.div>
+                </motion.div>
               </motion.div>
-            </nav>
-          </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </header>
   );
 }

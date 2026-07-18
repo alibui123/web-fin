@@ -7,7 +7,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, Bot, ChevronRight, Plus } from "lucide-react"
-import { CALENDLY_URL } from "@/lib/site"
+import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
 import {
   READINESS_URL,
   solutionCards,
@@ -38,7 +38,8 @@ function DualCtas({ className = "" }: { className?: string }) {
         href={CALENDLY_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black text-sm font-bold tracking-[0.12em] uppercase transition-all duration-300 hover:bg-finova-cyan hover:text-white"
+        onPointerUp={clearStickyCta}
+        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-black text-sm font-bold tracking-[0.12em] uppercase transition-all duration-300 hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white"
       >
         {solutionsHubHero.primaryCta}
         <ArrowRight className="w-4 h-4" />
