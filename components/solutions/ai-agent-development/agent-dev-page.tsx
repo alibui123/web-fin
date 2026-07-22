@@ -323,7 +323,7 @@ function Hero() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-[12px] font-light leading-relaxed text-white/45">
+              <p className="mt-4 text-sm font-light leading-relaxed text-white/70">
                 Keeping it working in production is the actual service.
               </p>
             </div>
@@ -561,7 +561,7 @@ function WhatWeBuild() {
                   <h3 className="text-lg md:text-xl font-bold text-white tracking-tight mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-white/60 text-sm md:text-[15px] font-light leading-relaxed">
+                  <p className="text-base font-light leading-relaxed text-white/70 md:text-lg">
                     {item.body}
                   </p>
                 </div>
@@ -575,34 +575,245 @@ function WhatWeBuild() {
 }
 
 function HowItRuns() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const sectionRef = useRef<HTMLElement>(null)
+  const inView = useInView(sectionRef, { once: true, margin: "-80px" })
+  const [active, setActive] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const resumeTimer = useRef<number | null>(null)
+  const ease = [0.16, 1, 0.3, 1] as const
+
+  const accents = [
+    {
+      text: "text-finova-cyan",
+      ring: "border-finova-cyan bg-finova-cyan",
+      glow: "bg-finova-cyan",
+      line: "from-finova-cyan to-finova-lightBlue",
+    },
+    {
+      text: "text-finova-magenta",
+      ring: "border-finova-magenta bg-finova-magenta",
+      glow: "bg-finova-magenta",
+      line: "from-finova-magenta to-finova-purple",
+    },
+    {
+      text: "text-finova-lightBlue",
+      ring: "border-finova-lightBlue bg-finova-lightBlue",
+      glow: "bg-finova-lightBlue",
+      line: "from-finova-lightBlue to-finova-cyan",
+    },
+    {
+      text: "text-finova-cyan",
+      ring: "border-finova-cyan bg-finova-cyan",
+      glow: "bg-finova-cyan",
+      line: "from-finova-cyan via-finova-lightBlue to-finova-magenta",
+    },
+  ] as const
+
+  const selectStage = (i: number) => {
+    setActive(i)
+    setPaused(true)
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    resumeTimer.current = window.setTimeout(() => setPaused(false), 12000)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!inView || paused) return
+    const id = window.setInterval(() => {
+      setActive((n) => (n + 1) % agentDevHow.stages.length)
+    }, 4800)
+    return () => window.clearInterval(id)
+  }, [inView, paused])
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-agent-how-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.09,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  const stage = agentDevHow.stages[active]
+  const accent = accents[active]
+  const progress = ((active + 1) / agentDevHow.stages.length) * 100
 
   return (
     <section
-      ref={ref}
-      className="relative py-20 md:py-24 border-b border-white/5 bg-gradient-to-r from-finova-cyan/[0.04] via-transparent to-finova-magenta/[0.04]"
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
     >
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-6"
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-finova-cyan/[0.06] via-transparent to-finova-magenta/[0.06]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-64 w-[40rem] -translate-x-1/2 rounded-full bg-finova-cyan/10 blur-[100px]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div data-agent-how-y className="max-w-3xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.65rem] md:leading-[1.1]">
+            {agentDevHow.heading}
+          </h2>
+        </div>
+
+        {/* Idea → Running runway (desktop) */}
+        <div data-agent-how-y className="mt-12 hidden md:mt-16 md:block">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30">
+              idea
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30">
+              running
+            </span>
+          </div>
+
+          <div className="relative mb-10">
+            <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-white/10" />
+            <div
+              className={`absolute left-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r ${accent.line} transition-all duration-700 ease-out`}
+              style={{ width: `${progress}%` }}
+            />
+            <ol className="relative grid grid-cols-4 gap-3">
+              {agentDevHow.stages.map((s, i) => {
+                const a = accents[i]
+                const isActive = active === i
+                const isPast = i < active
+                return (
+                  <li key={s.verb} className="flex justify-center">
+                    <button
+                      type="button"
+                      onMouseEnter={() => selectStage(i)}
+                      onFocus={() => selectStage(i)}
+                      onClick={() => selectStage(i)}
+                      className="group flex flex-col items-center gap-3"
+                    >
+                      <span
+                        className={`relative flex h-11 w-11 items-center justify-center rounded-full border-2 transition-all duration-300 ${
+                          isActive
+                            ? `${a.ring} text-finova-midnight shadow-[0_0_28px_rgba(14,165,233,0.35)]`
+                            : isPast
+                              ? "border-white/40 bg-white/15 text-white"
+                              : "border-white/15 bg-[#070d22] text-white/40 group-hover:border-white/30 group-hover:text-white/70"
+                        }`}
+                      >
+                        <span className="font-mono text-xs font-semibold">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        {isActive ? (
+                          <span
+                            aria-hidden
+                            className={`absolute inset-0 rounded-full ${a.glow} opacity-30 blur-md`}
+                          />
+                        ) : null}
+                      </span>
+                      <span
+                        className={`text-sm font-bold tracking-tight transition-colors duration-300 md:text-base ${
+                          isActive
+                            ? a.text
+                            : isPast
+                              ? "text-white/70"
+                              : "text-white/35 group-hover:text-white/60"
+                        }`}
+                      >
+                        {s.verb}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+
+          <div className="relative min-h-[10rem] overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#070d22]/80 p-8 backdrop-blur-md md:p-11">
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r ${accent.line}`}
+            />
+            <div
+              aria-hidden
+              className={`pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full blur-3xl opacity-30 transition-colors duration-500 ${accent.glow}`}
+            />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={stage.verb}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35, ease }}
+              >
+                <p className={`mb-5 flex items-baseline gap-3 ${accent.text}`}>
+                  <span className="font-mono text-base font-semibold tracking-[0.14em] md:text-lg">
+                    {String(active + 1).padStart(2, "0")}
+                  </span>
+                  <span aria-hidden className="text-white/30">
+                    —
+                  </span>
+                  <span className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    {stage.verb}
+                  </span>
+                </p>
+                <p className="max-w-3xl text-lg font-light leading-relaxed text-white/75 md:text-xl md:leading-relaxed">
+                  {stage.body}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Mobile: stacked path */}
+        <ol data-agent-how-y className="mt-12 space-y-0 md:hidden">
+          {agentDevHow.stages.map((s, i) => {
+            const a = accents[i]
+            return (
+              <li key={s.verb} className="relative flex gap-4 pb-10 last:pb-0">
+                {i < agentDevHow.stages.length - 1 ? (
+                  <span
+                    aria-hidden
+                    className={`absolute bottom-0 left-[1.15rem] top-11 w-px bg-gradient-to-b ${a.line} opacity-40`}
+                  />
+                ) : null}
+                <span
+                  className={`relative z-10 mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-semibold ${a.ring} text-finova-midnight`}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0 pt-0.5">
+                  <p className={`mb-2 text-lg font-bold tracking-tight ${a.text}`}>
+                    {s.verb}
+                  </p>
+                  <p className="text-[15px] font-light leading-relaxed text-white/65">
+                    {s.body}
+                  </p>
+                </div>
+              </li>
+            )
+          })}
+        </ol>
+
+        <motion.div
+          data-agent-how-y
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2, ease }}
+          className="mt-12 flex items-center gap-3 border-t border-white/10 pt-8 md:mt-16"
         >
-          {agentDevHow.heading}
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1 }}
-          className="text-white/65 text-base md:text-lg font-light leading-relaxed"
-        >
-          <LinkedPhrase
-            text={agentDevHow.body}
-            phrase={agentDevHow.howItWorksAnchor}
-            href={agentDevHow.howItWorksHref}
-          />
-        </motion.p>
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">
+            <LinkedPhrase
+              text={agentDevHow.coda}
+              phrase={agentDevHow.howItWorksAnchor}
+              href={agentDevHow.howItWorksHref}
+            />
+          </p>
+          <ArrowRight className="h-4 w-4 text-finova-cyan" aria-hidden />
+        </motion.div>
       </div>
     </section>
   )

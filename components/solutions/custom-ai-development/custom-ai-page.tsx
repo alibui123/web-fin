@@ -443,7 +443,7 @@ function Problem() {
               <span className="text-3xl font-bold tracking-tight text-finova-magenta md:text-4xl">
                 permanent tax
               </span>
-              <span className="mt-2 max-w-[11rem] text-xs font-light leading-snug text-white/40">
+              <span className="mt-2 max-w-[14rem] text-sm font-medium leading-snug text-white/70 md:text-base">
                 paid in hours every week
               </span>
             </div>

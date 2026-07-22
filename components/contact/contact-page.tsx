@@ -10,6 +10,7 @@ import {
 } from "react"
 import Link from "next/link"
 import {
+  AnimatePresence,
   motion,
   useInView,
   useMotionValue,
@@ -368,8 +369,10 @@ function MessageForm() {
   const [message, setMessage] = useState("")
   const [phone, setPhone] = useState("")
   const [marketingConsent, setMarketingConsent] = useState(false)
+  const [nameError, setNameError] = useState(false)
   const [emailError, setEmailError] = useState(false)
   const [companyError, setCompanyError] = useState(false)
+  const [messageError, setMessageError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [focused, setFocused] = useState<string | null>(null)
@@ -385,24 +388,35 @@ function MessageForm() {
           : "border-white/10 hover:border-white/20"
     }`
 
+  const validateName = (value = name) => {
+    const ok = Boolean(value.trim())
+    setNameError(!ok)
+    return ok
+  }
+  const validateEmail = (value = email) => {
+    const ok = isValidEmail(value)
+    setEmailError(!ok)
+    return ok
+  }
+  const validateCompany = (value = company) => {
+    const ok = Boolean(value.trim())
+    setCompanyError(!ok)
+    return ok
+  }
+  const validateMessage = (value = message) => {
+    const ok = Boolean(value.trim())
+    setMessageError(!ok)
+    return ok
+  }
+
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setEmailError(false)
-    setCompanyError(false)
 
-    let invalid = false
-    if (!isValidEmail(email)) {
-      setEmailError(true)
-      invalid = true
-    }
-    if (!company.trim()) {
-      setCompanyError(true)
-      invalid = true
-    }
-    if (!name.trim() || !message.trim()) {
-      invalid = true
-    }
-    if (invalid) return
+    const nameOk = validateName()
+    const emailOk = validateEmail()
+    const companyOk = validateCompany()
+    const messageOk = validateMessage()
+    if (!nameOk || !emailOk || !companyOk || !messageOk) return
 
     setLoading(true)
     try {
@@ -431,6 +445,10 @@ function MessageForm() {
       setMessage("")
       setPhone("")
       setMarketingConsent(false)
+      setNameError(false)
+      setEmailError(false)
+      setCompanyError(false)
+      setMessageError(false)
       setTimeout(() => setSuccess(false), 6000)
     } catch {
       // Keep form usable; no invented error copy
@@ -472,11 +490,24 @@ function MessageForm() {
                     autoComplete="name"
                     placeholder={f.name.placeholder}
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value)
+                      if (nameError) setNameError(false)
+                    }}
                     onFocus={() => setFocused("name")}
-                    onBlur={() => setFocused(null)}
-                    className={fieldClass(focused === "name")}
+                    onBlur={() => {
+                      setFocused(null)
+                      validateName()
+                    }}
+                    className={fieldClass(focused === "name", nameError)}
+                    aria-invalid={nameError}
+                    aria-describedby={nameError ? "contact-name-error" : undefined}
                   />
+                  {nameError ? (
+                    <p id="contact-name-error" className="mt-2 text-sm text-red-300/90">
+                      {f.name.error}
+                    </p>
+                  ) : null}
                 </div>
 
                 <div>
@@ -496,12 +527,18 @@ function MessageForm() {
                       if (emailError) setEmailError(false)
                     }}
                     onFocus={() => setFocused("email")}
-                    onBlur={() => setFocused(null)}
+                    onBlur={() => {
+                      setFocused(null)
+                      validateEmail()
+                    }}
                     className={fieldClass(focused === "email", emailError)}
                     aria-invalid={emailError}
+                    aria-describedby={emailError ? "contact-email-error" : undefined}
                   />
                   {emailError ? (
-                    <p className="mt-2 text-sm text-red-300/90">{f.email.error}</p>
+                    <p id="contact-email-error" className="mt-2 text-sm text-red-300/90">
+                      {f.email.error}
+                    </p>
                   ) : null}
                 </div>
 
@@ -522,12 +559,18 @@ function MessageForm() {
                       if (companyError) setCompanyError(false)
                     }}
                     onFocus={() => setFocused("company")}
-                    onBlur={() => setFocused(null)}
+                    onBlur={() => {
+                      setFocused(null)
+                      validateCompany()
+                    }}
                     className={fieldClass(focused === "company", companyError)}
                     aria-invalid={companyError}
+                    aria-describedby={companyError ? "contact-company-error" : undefined}
                   />
                   {companyError ? (
-                    <p className="mt-2 text-sm text-red-300/90">{f.company.error}</p>
+                    <p id="contact-company-error" className="mt-2 text-sm text-red-300/90">
+                      {f.company.error}
+                    </p>
                   ) : null}
                 </div>
 
@@ -542,11 +585,24 @@ function MessageForm() {
                     rows={5}
                     placeholder={f.message.placeholder}
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                      setMessage(e.target.value)
+                      if (messageError) setMessageError(false)
+                    }}
                     onFocus={() => setFocused("message")}
-                    onBlur={() => setFocused(null)}
-                    className={`${fieldClass(focused === "message")} resize-y min-h-[140px]`}
+                    onBlur={() => {
+                      setFocused(null)
+                      validateMessage()
+                    }}
+                    className={`${fieldClass(focused === "message", messageError)} resize-y min-h-[140px]`}
+                    aria-invalid={messageError}
+                    aria-describedby={messageError ? "contact-message-error" : undefined}
                   />
+                  {messageError ? (
+                    <p id="contact-message-error" className="mt-2 text-sm text-red-300/90">
+                      {f.message.error}
+                    </p>
+                  ) : null}
                 </div>
 
                 <div>
@@ -579,15 +635,35 @@ function MessageForm() {
               </div>
 
               <div className="mt-8">
+                {success ? (
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="mb-6 flex gap-4 rounded-2xl border border-finova-cyan/35 bg-finova-cyan/[0.1] p-5"
+                  >
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-finova-cyan" />
+                    <div>
+                      <p className="text-base font-semibold tracking-tight text-white">
+                        {contactForm.successHeading}
+                      </p>
+                      <p className="mt-1.5 text-sm font-light leading-relaxed text-white/70">
+                        {contactForm.successBody}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
+
                 <button
                   type="submit"
                   disabled={loading || success}
                   className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-finova-cyan hover:text-white active:bg-finova-cyan active:text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
-                  {success ? (
+                  {loading ? (
+                    "Sending…"
+                  ) : success ? (
                     <>
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      {contactForm.submit}
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      Sent
                     </>
                   ) : (
                     <>
@@ -644,21 +720,172 @@ function Direct() {
 }
 
 function After() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [branch, setBranch] = useState<"fit" | "nofit">("fit")
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-after-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+      gsap.from("[data-after-fork]", {
+        scaleY: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        transformOrigin: "top center",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 65%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setBranch((b) => (b === "fit" ? "nofit" : "fit"))
+    }, 4200)
+    return () => window.clearInterval(id)
+  }, [])
+
   return (
-    <section className="relative border-b border-white/5 py-20 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_100%,rgba(14,165,233,0.1),transparent_55%)]" />
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_0%,rgba(14,165,233,0.1),transparent_55%)]" />
+      <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-finova-magenta/10 blur-[100px]" />
+
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
-            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
-              {contactAfter.heading}
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="mt-8 text-base font-light leading-relaxed text-white/60 md:text-lg">
-              {contactAfter.body}
+        <div data-after-y className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-[2.65rem]">
+            {contactAfter.heading}
+          </h2>
+          <p className="mt-5 text-base font-light leading-relaxed text-white/50 md:text-lg">
+            {contactAfter.promise}
+          </p>
+        </div>
+
+        {/* Honest fork — reads → fit | not a fit → honest read */}
+        <div data-after-y className="relative mx-auto mt-14 max-w-4xl md:mt-16">
+          {/* Stem: a person reads */}
+          <div className="relative mx-auto max-w-md overflow-hidden rounded-2xl border border-white/10 bg-[#070d22]/85 px-6 py-5 text-center md:px-8 md:py-6">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-finova-cyan/[0.08] to-transparent" />
+            <p className="relative text-base font-medium text-white/85 md:text-lg">
+              {contactAfter.reads}
             </p>
-          </Reveal>
+          </div>
+
+          {/* Fork rails */}
+          <div className="relative mx-auto flex h-10 w-full max-w-lg justify-center md:h-14">
+            <span
+              aria-hidden
+              data-after-fork
+              className="absolute top-0 h-full w-px bg-gradient-to-b from-white/30 to-white/10"
+            />
+          </div>
+
+          <div
+            className="grid gap-4 md:grid-cols-2 md:gap-5"
+            onMouseLeave={() => setBranch("fit")}
+          >
+            {/* Fit branch */}
+            <button
+              type="button"
+              onMouseEnter={() => setBranch("fit")}
+              onFocus={() => setBranch("fit")}
+              className={`relative overflow-hidden rounded-[1.5rem] border p-6 text-left transition-all duration-500 md:p-8 ${
+                branch === "fit"
+                  ? "border-finova-cyan/40 bg-gradient-to-br from-finova-cyan/[0.14] via-finova-cyan/[0.04] to-transparent"
+                  : "border-white/10 bg-white/[0.02] opacity-70 hover:opacity-90"
+              }`}
+            >
+              <span
+                className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  branch === "fit" ? "text-finova-cyan" : "text-white/30"
+                }`}
+              >
+                {contactAfter.fitLabel}
+              </span>
+              <p
+                className={`mt-4 text-[15px] font-light leading-relaxed transition-colors duration-300 md:text-base ${
+                  branch === "fit" ? "text-white/80" : "text-white/45"
+                }`}
+              >
+                {contactAfter.fit}
+              </p>
+            </button>
+
+            {/* Not a fit branch */}
+            <button
+              type="button"
+              onMouseEnter={() => setBranch("nofit")}
+              onFocus={() => setBranch("nofit")}
+              className={`relative overflow-hidden rounded-[1.5rem] border p-6 text-left transition-all duration-500 md:p-8 ${
+                branch === "nofit"
+                  ? "border-finova-magenta/40 bg-gradient-to-br from-finova-magenta/[0.14] via-finova-magenta/[0.04] to-transparent"
+                  : "border-white/10 bg-white/[0.02] opacity-70 hover:opacity-90"
+              }`}
+            >
+              <span
+                className={`font-mono text-[10px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  branch === "nofit" ? "text-finova-magenta" : "text-white/30"
+                }`}
+              >
+                {contactAfter.noFitLabel}
+              </span>
+              <p
+                className={`mt-4 text-[15px] font-light leading-relaxed transition-colors duration-300 md:text-base ${
+                  branch === "nofit" ? "text-white/80" : "text-white/45"
+                }`}
+              >
+                {contactAfter.noFit}
+              </p>
+            </button>
+          </div>
+
+          {/* Converge rails */}
+          <div className="relative mx-auto flex h-10 w-full max-w-lg justify-center md:h-14">
+            <span
+              aria-hidden
+              className="absolute bottom-0 top-0 w-px bg-gradient-to-b from-white/10 to-white/30"
+            />
+          </div>
+
+          {/* Either way — honest read */}
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-white/15 bg-gradient-to-br from-white/[0.06] via-[#070d22]/90 to-finova-cyan/[0.08] p-7 text-center md:p-10">
+            <div className="pointer-events-none absolute -left-16 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-finova-cyan/15 blur-3xl" />
+            <div className="pointer-events-none absolute -right-16 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-finova-magenta/15 blur-3xl" />
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={branch}
+                initial={{ opacity: 0.6 }}
+                animate={{ opacity: 1 }}
+                className="relative text-base font-light leading-relaxed text-white/70 md:text-lg lg:text-xl lg:leading-relaxed"
+              >
+                {contactAfter.eitherWay.split(contactAfter.honestRead).map((part, i, arr) =>
+                  i < arr.length - 1 ? (
+                    <span key={i}>
+                      {part}
+                      <span
+                        className={`font-medium ${
+                          branch === "fit" ? "text-finova-cyan" : "text-finova-magenta"
+                        }`}
+                      >
+                        {contactAfter.honestRead}
+                      </span>
+                    </span>
+                  ) : (
+                    <span key={i}>{part}</span>
+                  ),
+                )}
+              </motion.p>
+            </AnimatePresence>
+          </div>
         </div>
       </Container>
     </section>

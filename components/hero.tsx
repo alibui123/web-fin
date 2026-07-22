@@ -103,7 +103,7 @@ export default function Hero() {
 
           <motion.div
             variants={itemVariants}
-            className="space-y-5 text-base sm:text-lg md:text-xl text-white/70 font-light leading-relaxed max-w-3xl"
+            className="relative max-w-3xl space-y-5 text-base sm:text-lg md:text-xl text-white/90 font-light leading-relaxed [text-shadow:0_1px_2px_rgba(5,10,28,0.9),0_0_24px_rgba(5,10,28,0.85),0_0_48px_rgba(5,10,28,0.55)]"
           >
             <p>
               Every day, skilled people on your team spend hours on work a machine should handle.

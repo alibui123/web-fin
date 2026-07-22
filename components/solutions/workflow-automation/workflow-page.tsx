@@ -507,6 +507,8 @@ function HowItRuns() {
   const sectionRef = useRef<HTMLElement>(null)
   const inView = useInView(sectionRef, { once: true, margin: "-80px" })
   const [active, setActive] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const resumeTimer = useRef<number | null>(null)
   const ease = [0.16, 1, 0.3, 1] as const
   const accents = [
     { ring: "border-finova-cyan/50", glow: "bg-finova-cyan", text: "text-finova-cyan", line: "from-finova-cyan to-finova-lightBlue" },
@@ -515,13 +517,26 @@ function HowItRuns() {
     { ring: "border-finova-lightBlue/50", glow: "bg-finova-lightBlue", text: "text-finova-lightBlue", line: "from-finova-lightBlue to-finova-cyan" },
   ] as const
 
+  const selectStage = (i: number) => {
+    setActive(i)
+    setPaused(true)
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    resumeTimer.current = window.setTimeout(() => setPaused(false), 12000)
+  }
+
   useEffect(() => {
-    if (!inView) return
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!inView || paused) return
     const id = window.setInterval(() => {
       setActive((n) => (n + 1) % workflowHow.stages.length)
-    }, 3800)
+    }, 5500)
     return () => window.clearInterval(id)
-  }, [inView])
+  }, [inView, paused])
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
@@ -562,10 +577,10 @@ function HowItRuns() {
           className="mt-12 hidden gap-12 lg:mt-16 lg:grid lg:grid-cols-[minmax(0,15rem)_1fr] lg:items-start lg:gap-16"
         >
           <ol className="relative flex flex-col gap-0">
-            <span
-              aria-hidden
-              className="absolute bottom-4 left-[1.15rem] top-4 w-px bg-white/10"
-            />
+              <span
+                aria-hidden
+                className="absolute bottom-4 left-[1.4rem] top-4 w-px bg-white/10"
+              />
             {workflowHow.stages.map((s, i) => {
               const a = accents[i]
               const isActive = active === i
@@ -573,18 +588,18 @@ function HowItRuns() {
                 <li key={s.verb} className="relative">
                   <button
                     type="button"
-                    onMouseEnter={() => setActive(i)}
-                    onFocus={() => setActive(i)}
-                    onClick={() => setActive(i)}
+                    onMouseEnter={() => selectStage(i)}
+                    onFocus={() => selectStage(i)}
+                    onClick={() => selectStage(i)}
                     className={`group relative flex w-full items-center gap-4 py-4 text-left transition-colors duration-300 ${
                       isActive ? "text-white" : "text-white/40 hover:text-white/70"
                     }`}
                   >
                     <span
-                      className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-[#070d22] font-mono text-[11px] transition-all duration-300 ${
+                      className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border bg-[#070d22] font-mono text-sm font-semibold transition-all duration-300 ${
                         isActive
                           ? `${a.ring} ${a.text} shadow-[0_0_24px_rgba(14,165,233,0.25)]`
-                          : "border-white/15 text-white/35"
+                          : "border-white/15 text-white/45"
                       }`}
                     >
                       {String(i + 1).padStart(2, "0")}
@@ -596,7 +611,7 @@ function HowItRuns() {
                       ) : null}
                     </span>
                     <span
-                      className={`text-lg font-semibold tracking-tight transition-colors duration-300 ${
+                      className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
                         isActive ? a.text : ""
                       }`}
                     >
@@ -625,8 +640,16 @@ function HowItRuns() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.35, ease }}
               >
-                <p className={`mb-5 font-mono text-[11px] uppercase tracking-[0.24em] ${accent.text}`}>
-                  {String(active + 1).padStart(2, "0")} — {stage.verb}
+                <p className={`mb-5 flex items-baseline gap-3 ${accent.text}`}>
+                  <span className="font-mono text-base font-semibold tracking-[0.14em] md:text-lg">
+                    {String(active + 1).padStart(2, "0")}
+                  </span>
+                  <span aria-hidden className="text-white/30">
+                    —
+                  </span>
+                  <span className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    {stage.verb}
+                  </span>
                 </p>
                 <p className="max-w-2xl text-lg font-light leading-relaxed text-white/75 md:text-xl md:leading-relaxed">
                   {stage.body}
@@ -640,7 +663,7 @@ function HowItRuns() {
                   key={i}
                   type="button"
                   aria-label={`Stage ${i + 1}`}
-                  onClick={() => setActive(i)}
+                  onClick={() => selectStage(i)}
                   className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
                     i === active
                       ? `bg-gradient-to-r ${accents[i].line}`
@@ -663,16 +686,16 @@ function HowItRuns() {
                 {i < workflowHow.stages.length - 1 ? (
                   <span
                     aria-hidden
-                    className={`absolute bottom-0 left-[1.15rem] top-9 w-px bg-gradient-to-b ${a.line} opacity-40`}
+                    className={`absolute bottom-0 left-[1.4rem] top-11 w-px bg-gradient-to-b ${a.line} opacity-40`}
                   />
                 ) : null}
                 <span
-                  className={`relative z-10 mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-[#070d22] font-mono text-[11px] ${a.ring} ${a.text}`}
+                  className={`relative z-10 mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border bg-[#070d22] font-mono text-sm font-semibold ${a.ring} ${a.text}`}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="min-w-0 pt-1">
-                  <p className={`mb-2 text-base font-semibold tracking-tight ${a.text}`}>
+                  <p className={`mb-2 text-xl font-bold tracking-tight ${a.text}`}>
                     {s.verb}
                   </p>
                   <p className="text-[15px] font-light leading-relaxed text-white/65">
@@ -924,27 +947,157 @@ function Governance() {
 }
 
 function Audience() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const sectionRef = useRef<HTMLElement>(null)
+  const [hotDomain, setHotDomain] = useState(0)
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-wf-audience-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+      gsap.from("[data-wf-chain-node]", {
+        opacity: 0,
+        y: 16,
+        duration: 0.55,
+        stagger: 0.08,
+        ease: "power3.out",
+        clearProps: "all",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 68%", once: true },
+      })
+      gsap.from("[data-wf-chain-line]", {
+        scaleX: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        transformOrigin: "left center",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 68%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setHotDomain((n) => (n + 1) % workflowAudience.domains.length)
+    }, 2800)
+    return () => window.clearInterval(id)
+  }, [])
+
+  const domainAccents = [
+    "border-finova-cyan/50 bg-finova-cyan/15 text-finova-cyan",
+    "border-finova-lightBlue/50 bg-finova-lightBlue/15 text-finova-lightBlue",
+    "border-finova-magenta/50 bg-finova-magenta/15 text-finova-magenta",
+    "border-finova-purple/50 bg-finova-purple/15 text-finova-purple",
+    "border-finova-cyan/50 bg-finova-cyan/15 text-finova-cyan",
+  ] as const
 
   return (
-    <section ref={ref} className="relative py-20 md:py-28 border-b border-white/5">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-6"
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_80%_10%,rgba(14,165,233,0.1),transparent_55%)]" />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-72 w-72 rounded-full bg-finova-magenta/10 blur-[110px]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div data-wf-audience-y className="max-w-2xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.65rem]">
+            {workflowAudience.heading}
+          </h2>
+          <p className="mt-5 text-base font-light leading-relaxed text-white/60 md:text-lg">
+            {workflowAudience.lead}
+          </p>
+        </div>
+
+        {/* Domain chain — the signature of this section */}
+        <div
+          data-wf-audience-y
+          className="relative mt-10 md:mt-12"
+          onMouseLeave={() => setHotDomain(0)}
         >
-          {workflowAudience.heading}
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1 }}
-          className="text-white/65 text-base md:text-lg font-light leading-relaxed"
+          <div className="flex flex-wrap items-center gap-2 md:gap-0 md:flex-nowrap">
+            {workflowAudience.domains.map((domain, i) => {
+              const active = hotDomain === i
+              return (
+                <div key={domain} className="flex items-center md:flex-1">
+                  <button
+                    type="button"
+                    data-wf-chain-node
+                    onMouseEnter={() => setHotDomain(i)}
+                    onFocus={() => setHotDomain(i)}
+                    className={`relative z-10 rounded-full border px-3.5 py-2 text-left text-xs font-bold uppercase tracking-[0.14em] transition-all duration-300 md:w-full md:px-4 md:py-2.5 md:text-center ${
+                      active
+                        ? domainAccents[i]
+                        : "border-white/12 bg-white/[0.03] text-white/45 hover:border-white/25 hover:text-white/70"
+                    }`}
+                  >
+                    {domain}
+                  </button>
+                  {i < workflowAudience.domains.length - 1 ? (
+                    <span
+                      aria-hidden
+                      data-wf-chain-line
+                      className="mx-1 hidden h-px flex-1 bg-gradient-to-r from-white/25 via-white/15 to-white/25 md:mx-2 md:block"
+                    />
+                  ) : null}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Surfaces strip */}
+        <div
+          data-wf-audience-y
+          className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-white/10 py-4 md:mt-10"
         >
-          {workflowAudience.body}
-        </motion.p>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
+            Work lives in
+          </span>
+          {workflowAudience.surfaces.map((surface, i) => (
+            <span key={surface} className="inline-flex items-center gap-3">
+              {i > 0 ? (
+                <span aria-hidden className="text-white/20">
+                  ·
+                </span>
+              ) : null}
+              <span className="text-sm font-medium tracking-wide text-white/70 md:text-[15px]">
+                {surface}
+              </span>
+            </span>
+          ))}
+        </div>
+
+        {/* Fit / weaker polarity */}
+        <div data-wf-audience-y className="relative mt-10 md:mt-14">
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-finova-cyan/30 bg-gradient-to-br from-finova-cyan/[0.12] via-[#070d22]/80 to-finova-magenta/[0.06] p-7 md:p-10 lg:p-12">
+            <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-finova-cyan/20 blur-3xl" />
+            <div
+              aria-hidden
+              className="mb-6 h-[2px] w-16 bg-gradient-to-r from-finova-cyan via-finova-lightBlue to-transparent"
+            />
+            <p className="relative max-w-3xl text-base font-light leading-relaxed text-white/75 md:text-lg lg:text-xl lg:leading-relaxed">
+              {workflowAudience.fit}
+            </p>
+          </div>
+
+          <div className="relative mx-auto mt-4 max-w-4xl md:-mt-6 md:ml-auto md:mr-8 md:w-[88%]">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-finova-midnight/95 p-6 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-md md:p-8">
+              <div
+                aria-hidden
+                className="absolute inset-y-0 left-0 w-[3px] bg-gradient-to-b from-white/30 via-white/10 to-transparent"
+              />
+              <p className="pl-3 text-base font-light leading-relaxed text-white/50 md:pl-4 md:text-lg">
+                {workflowAudience.weaker}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

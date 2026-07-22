@@ -105,6 +105,26 @@ export const agentDevHow = {
   body: "We map the workflow the agent will own and tell you honestly whether an agent is the right tool for it. We build it inside your stack and test it against real scenarios, not just clean examples, before it touches a live customer. We point it at the number it needs to move and report against that number from day one. Then we run it, monitor it, and tune it, so it keeps working as your business changes. See the full model on how it works.",
   howItWorksAnchor: "how it works",
   howItWorksHref: "/how-it-works",
+  // Layout slices — exact sentences from body, not new copy
+  stages: [
+    {
+      verb: "Map",
+      body: "We map the workflow the agent will own and tell you honestly whether an agent is the right tool for it.",
+    },
+    {
+      verb: "Build",
+      body: "We build it inside your stack and test it against real scenarios, not just clean examples, before it touches a live customer.",
+    },
+    {
+      verb: "Point",
+      body: "We point it at the number it needs to move and report against that number from day one.",
+    },
+    {
+      verb: "Run",
+      body: "Then we run it, monitor it, and tune it, so it keeps working as your business changes.",
+    },
+  ],
+  coda: "See the full model on how it works.",
 }
 
 export const agentDevProof = {

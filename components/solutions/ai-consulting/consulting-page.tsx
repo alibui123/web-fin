@@ -123,7 +123,7 @@ function LinkedPhrase({
       {parts[0]}
       <Link
         href={href}
-        className="text-finova-cyan hover:text-finova-lightBlue underline-offset-4 hover:underline transition-colors"
+        className="font-medium text-finova-cyan underline decoration-finova-cyan/50 underline-offset-[3px] transition-colors hover:text-finova-lightBlue hover:decoration-finova-lightBlue"
       >
         {phrase}
       </Link>
@@ -169,7 +169,7 @@ function MultiLinkedText({
           <Link
             key={i}
             href={seg.href}
-            className="text-finova-cyan hover:text-finova-lightBlue underline-offset-4 hover:underline transition-colors font-medium"
+            className="font-medium text-finova-cyan underline decoration-finova-cyan/50 underline-offset-[3px] transition-colors hover:text-finova-lightBlue hover:decoration-finova-lightBlue"
           >
             {seg.phrase}
           </Link>

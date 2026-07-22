@@ -129,6 +129,17 @@ export const pricingAlwaysTrue = {
 export const pricingInaction = {
   heading: "The most expensive option is usually to keep doing it by hand",
   body: "It is worth naming the option nobody puts on a pricing page. Doing nothing has a price too, and for most of the operators we work with it is the highest one on the list. It is a salary of hours spent on work a machine should handle, a steady drip of leads and revenue leaking out of the gaps, and a cost that grows every time the business does, because the manual layer scales with volume. The audit exists to put a real number on that, so you can weigh what an agent costs against what the status quo is already costing you, and make the call on evidence.",
+  // Layout slices — exact text from body, not new copy
+  lead: "It is worth naming the option nobody puts on a pricing page. Doing nothing has a price too, and for most of the operators we work with it is the highest one on the list.",
+  costs: [
+    "a salary of hours spent on work a machine should handle",
+    "a steady drip of leads and revenue leaking out of the gaps",
+    "a cost that grows every time the business does, because the manual layer scales with volume",
+  ],
+  audit:
+    "The audit exists to put a real number on that, so you can weigh what an agent costs against what the status quo is already costing you, and make the call on evidence.",
+  auditAnchor: "The audit",
+  auditHref: "/solutions/ai-consulting",
 }
 
 export const pricingProof = {

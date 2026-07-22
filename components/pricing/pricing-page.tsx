@@ -122,7 +122,7 @@ function LinkedPhrase({
       {parts[0]}
       <Link
         href={href}
-        className="text-finova-cyan hover:text-finova-lightBlue underline-offset-4 hover:underline transition-colors"
+        className="font-medium text-finova-cyan underline decoration-finova-cyan/50 underline-offset-[3px] transition-colors hover:text-finova-lightBlue hover:decoration-finova-lightBlue"
       >
         {phrase}
       </Link>
@@ -209,7 +209,7 @@ function PricingEngagementLedger() {
       initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: 0.18, ease }}
-      className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-7"
+      className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-7"
     >
       <div
         aria-hidden
@@ -229,7 +229,7 @@ function PricingEngagementLedger() {
             key={row}
             className="flex items-center gap-3 rounded-lg border border-dashed border-white/10 bg-white/[0.02] px-3 py-2.5"
           >
-            <span className="flex-1 text-sm text-white/30 line-through decoration-white/20">
+            <span className="flex-1 text-[15px] text-white/45 line-through decoration-white/30 md:text-base">
               {row}
             </span>
             <span
@@ -242,7 +242,7 @@ function PricingEngagementLedger() {
 
       <div className="relative mt-6 space-y-5 border-t border-white/10 pt-6">
         <div>
-          <p className="text-sm font-medium leading-snug text-white/75 md:text-base">
+          <p className="text-[15px] font-medium leading-snug text-white/85 md:text-base">
             {pricingHero.ledgerScope}
           </p>
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
@@ -254,11 +254,15 @@ function PricingEngagementLedger() {
           </div>
         </div>
 
-        <p className="text-sm leading-snug text-white/55">{pricingHero.ledgerCommit}</p>
+        <p className="text-[15px] leading-snug text-white/70 md:text-base">
+          {pricingHero.ledgerCommit}
+        </p>
       </div>
 
       <div className="relative mt-6 border-t border-white/10 pt-6">
-        <p className="text-sm font-medium text-white/50">{pricingHero.alwaysTrueLead}</p>
+        <p className="text-[15px] font-medium text-white/70 md:text-base">
+          {pricingHero.alwaysTrueLead}
+        </p>
 
         <div className="mt-4 space-y-2">
           {pricingHero.alwaysTrueBeats.map((beat, i) => {
@@ -288,8 +292,8 @@ function PricingEngagementLedger() {
                     }`}
                   />
                   <span
-                    className={`text-sm font-semibold capitalize transition-colors duration-300 ${
-                      isActive ? accents[i] : "text-white/40"
+                    className={`text-[15px] font-semibold capitalize transition-colors duration-300 md:text-base ${
+                      isActive ? accents[i] : "text-white/55"
                     }`}
                   >
                     {beat.mark}
@@ -303,7 +307,7 @@ function PricingEngagementLedger() {
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.35, ease }}
-                      className="mt-2 overflow-hidden text-sm font-light leading-relaxed text-white/60"
+                      className="mt-2 overflow-hidden text-[15px] font-light leading-relaxed text-white/75 md:text-base"
                     >
                       {beat.body}
                     </motion.p>
@@ -541,9 +545,9 @@ function Stages() {
                 </div>
 
                 <div
-                  className={`mb-5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${stage.accent}`}
+                  className={`mb-5 flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${stage.accent} md:h-[4.5rem] md:w-[4.5rem]`}
                 >
-                  <Icon className="w-6 h-6 text-white" />
+                  <Icon className="h-8 w-8 text-white md:h-9 md:w-9" strokeWidth={1.75} />
                 </div>
 
                 <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-white/40 mb-2">
@@ -574,17 +578,34 @@ function Stages() {
 
 function AlwaysTrue() {
   const sectionRef = useRef<HTMLElement>(null)
+  const accents = [
+    "text-finova-cyan",
+    "text-finova-magenta",
+    "text-finova-lightBlue",
+  ] as const
+  const rails = [
+    "from-finova-cyan via-finova-cyan/40 to-transparent",
+    "from-finova-magenta via-finova-magenta/40 to-transparent",
+    "from-finova-lightBlue via-finova-lightBlue/40 to-transparent",
+  ] as const
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
     const ctx = gsap.context(() => {
-      gsap.from("[data-true]", {
+      gsap.from("[data-true-head]", {
         opacity: 0,
-        y: 28,
-        duration: 0.8,
-        stagger: 0.12,
+        y: 20,
+        duration: 0.7,
         ease: "power3.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 72%" },
+        scrollTrigger: { trigger: sectionRef.current, start: "top 75%", once: true },
+      })
+      gsap.from("[data-true-row]", {
+        opacity: 0,
+        y: 24,
+        duration: 0.75,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 68%", once: true },
       })
     }, sectionRef)
     return () => ctx.revert()
@@ -593,33 +614,60 @@ function AlwaysTrue() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 md:py-28 border-b border-white/5"
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2
-          data-true
-          className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-12 max-w-2xl"
-        >
-          {pricingAlwaysTrue.heading}
-        </h2>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_8%_20%,rgba(14,165,233,0.1),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_40%_at_92%_80%,rgba(217,70,239,0.08),transparent_50%)]" />
 
-        <div className="grid md:grid-cols-3 gap-px bg-white/10 rounded-3xl overflow-hidden border border-white/10">
-          {pricingAlwaysTrue.principles.map((item) => {
-            const Icon = item.icon
-            return (
-              <div
-                key={item.text.slice(0, 32)}
-                data-true
-                className="bg-finova-midnight p-7 md:p-8 relative"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
-                <Icon className="relative w-5 h-5 text-finova-cyan mb-5" />
-                <p className="relative text-white/65 text-base font-light leading-relaxed">
-                  {item.text}
-                </p>
-              </div>
-            )
-          })}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-4">
+            <h2
+              data-true-head
+              className="max-w-sm text-3xl font-bold tracking-tight text-white md:text-4xl lg:sticky lg:top-28"
+            >
+              {pricingAlwaysTrue.heading}
+            </h2>
+          </div>
+
+          <div className="lg:col-span-8">
+            <ol className="relative border-t border-white/10">
+              {pricingAlwaysTrue.principles.map((item, i) => {
+                const Icon = item.icon
+                return (
+                  <li
+                    key={item.text.slice(0, 32)}
+                    data-true-row
+                    className="group relative border-b border-white/10 py-7 md:py-8"
+                  >
+                    <span
+                      aria-hidden
+                      className={`pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b opacity-0 transition-opacity duration-500 group-hover:opacity-100 ${rails[i]}`}
+                    />
+
+                    <div className="grid gap-5 sm:grid-cols-[auto_1fr] sm:gap-8 md:gap-10">
+                      <div className="flex items-start gap-4 sm:flex-col sm:gap-5">
+                        <span
+                          className={`font-mono text-sm tracking-[0.22em] ${accents[i]}`}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] ${accents[i]}`}
+                        >
+                          <Icon className="h-5 w-5" strokeWidth={1.75} />
+                        </span>
+                      </div>
+
+                      <p className="pt-0.5 text-[15px] font-light leading-relaxed text-white/70 md:text-base">
+                        {item.text}
+                      </p>
+                    </div>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
         </div>
       </div>
     </section>
@@ -628,25 +676,56 @@ function AlwaysTrue() {
 
 function Inaction() {
   const sectionRef = useRef<HTMLElement>(null)
-  const lineRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(sectionRef, { once: true, margin: "-80px" })
+  const [hotCost, setHotCost] = useState(0)
+
+  const accents = [
+    {
+      bar: "from-finova-magenta to-finova-purple",
+      text: "text-finova-magenta",
+      glow: "bg-finova-magenta/20",
+      fill: "w-[42%]",
+    },
+    {
+      bar: "from-finova-purple to-finova-cyan",
+      text: "text-finova-lightBlue",
+      glow: "bg-finova-purple/20",
+      fill: "w-[68%]",
+    },
+    {
+      bar: "from-finova-cyan to-finova-lightBlue",
+      text: "text-finova-cyan",
+      glow: "bg-finova-cyan/20",
+      fill: "w-full",
+    },
+  ] as const
+
+  useEffect(() => {
+    if (!inView) return
+    const id = window.setInterval(() => {
+      setHotCost((n) => (n + 1) % pricingInaction.costs.length)
+    }, 3200)
+    return () => window.clearInterval(id)
+  }, [inView])
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
     const ctx = gsap.context(() => {
-      gsap.from(lineRef.current, {
-        scaleX: 0,
-        transformOrigin: "left center",
-        duration: 1.15,
-        ease: "power3.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
-      })
-      gsap.from("[data-inaction]", {
-        opacity: 0,
+      gsap.from("[data-inaction-y]", {
         y: 28,
-        duration: 0.9,
+        duration: 0.85,
         stagger: 0.1,
         ease: "power3.out",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 68%" },
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+      gsap.from("[data-inaction-fill]", {
+        scaleX: 0,
+        duration: 1.1,
+        stagger: 0.15,
+        ease: "power3.out",
+        transformOrigin: "left center",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 60%", once: true },
       })
     }, sectionRef)
     return () => ctx.revert()
@@ -655,31 +734,106 @@ function Inaction() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 md:py-28 border-b border-white/5 overflow-hidden"
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
     >
-      <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(217,70,239,0.08)_0%,transparent_45%,rgba(14,165,233,0.06)_100%)] pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_80%_10%,rgba(217,70,239,0.12),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_40%_at_10%_90%,rgba(14,165,233,0.08),transparent_50%)]" />
 
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          ref={lineRef}
-          className="h-px w-full bg-gradient-to-r from-finova-magenta via-finova-cyan to-finova-purple mb-12 origin-left"
-        />
-        <h2
-          data-inaction
-          className="text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-white tracking-tight leading-tight mb-8 max-w-3xl"
-        >
-          {pricingInaction.heading}
-        </h2>
-        <p
-          data-inaction
-          className="text-white/65 text-base md:text-xl font-light leading-relaxed max-w-3xl"
-        >
-          <LinkedPhrase
-            text={pricingInaction.body}
-            phrase="The audit"
-            href="/solutions/ai-consulting"
-          />
-        </p>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
+          <div data-inaction-y className="lg:col-span-5 lg:sticky lg:top-28">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.65rem] md:leading-[1.12]">
+              {pricingInaction.heading}
+            </h2>
+            <p className="mt-6 text-base font-light leading-relaxed text-white/55 md:text-lg">
+              {pricingInaction.lead}
+            </p>
+          </div>
+
+          <div className="lg:col-span-7">
+            {/* Cost of doing nothing ledger */}
+            <div
+              data-inaction-y
+              className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#070d22]/60"
+              onMouseLeave={() => setHotCost(0)}
+            >
+              <div className="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-4 md:px-8">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30">
+                  doing nothing
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-finova-magenta/80">
+                  highest on the list
+                </span>
+              </div>
+
+              <ol className="divide-y divide-white/10">
+                {pricingInaction.costs.map((cost, i) => {
+                  const accent = accents[i]
+                  const active = hotCost === i
+                  return (
+                    <li key={cost}>
+                      <button
+                        type="button"
+                        onMouseEnter={() => setHotCost(i)}
+                        onFocus={() => setHotCost(i)}
+                        className={`group relative w-full px-6 py-6 text-left transition-colors duration-300 md:px-8 md:py-7 ${
+                          active ? "bg-white/[0.04]" : "hover:bg-white/[0.02]"
+                        }`}
+                      >
+                        <span
+                          aria-hidden
+                          className={`pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl transition-opacity duration-500 ${accent.glow} ${
+                            active ? "opacity-100" : "opacity-0"
+                          }`}
+                        />
+                        <span className="relative mb-4 flex items-center justify-between gap-4">
+                          <span
+                            className={`font-mono text-xs tracking-[0.2em] transition-colors duration-300 ${
+                              active ? accent.text : "text-white/30"
+                            }`}
+                          >
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span className="h-1.5 w-24 overflow-hidden rounded-full bg-white/[0.06] md:w-32">
+                            <span
+                              data-inaction-fill
+                              className={`block h-full origin-left rounded-full bg-gradient-to-r ${accent.bar} ${accent.fill}`}
+                            />
+                          </span>
+                        </span>
+                        <p
+                          className={`relative text-[15px] font-light leading-relaxed transition-colors duration-300 md:text-base ${
+                            active ? "text-white/85" : "text-white/55"
+                          }`}
+                        >
+                          {cost}
+                        </p>
+                      </button>
+                    </li>
+                  )
+                })}
+              </ol>
+            </div>
+
+            {/* Audit coda */}
+            <div
+              data-inaction-y
+              className="relative mt-5 overflow-hidden rounded-2xl border border-finova-cyan/25 bg-gradient-to-br from-finova-cyan/[0.1] via-transparent to-finova-magenta/[0.06] p-6 md:mt-6 md:p-8"
+            >
+              <div
+                aria-hidden
+                className="mb-5 h-px w-12 bg-gradient-to-r from-finova-cyan to-transparent"
+              />
+              <p className="text-base font-light leading-relaxed text-white/70 md:text-lg">
+                <LinkedPhrase
+                  text={pricingInaction.audit}
+                  phrase={pricingInaction.auditAnchor}
+                  href={pricingInaction.auditHref}
+                />
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

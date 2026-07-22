@@ -130,6 +130,20 @@ export const qaData = {
   body: "QualiCore governs quality, and the same discipline extends to how data is handled. Every deployment is architected to meet the data-residency and privacy rules of the region it runs in, with zero retention by default, and your systems remain the system of record. Governance and compliance are designed in from the first line, not bolted on after an incident. See how we handle data and security.",
   trustAnchor: "data and security",
   trustHref: "/trust",
+  // Layout slices — exact text from body, not new copy
+  lead: "QualiCore governs quality, and the same discipline extends to how data is handled.",
+  rules:
+    "Every deployment is architected to meet the data-residency and privacy rules of the region it runs in, with zero retention by default, and your systems remain the system of record.",
+  pillars: [
+    "data-residency and privacy rules",
+    "zero retention by default",
+    "system of record",
+  ],
+  designedIn:
+    "Governance and compliance are designed in from the first line, not bolted on after an incident.",
+  designedPhrase: "designed in from the first line",
+  boltedPhrase: "bolted on after an incident",
+  coda: "See how we handle data and security.",
 }
 
 export const qaAudience = {

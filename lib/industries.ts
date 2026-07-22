@@ -93,6 +93,12 @@ export const industriesNotListed = {
   auditPhrase: "the audit",
   auditHref: "/ai-consulting",
   bookPhrase: "Book a call",
+  // Layout slices — exact text from body, not new copy
+  fit: "If your business runs on calls, follow-ups, and hand-entered data, the core almost certainly fits, whether or not your industry has its own page yet.",
+  signals: ["calls", "follow-ups", "hand-entered data"],
+  honest:
+    "The honest way to find out is the audit, where we map your specific workflow and tell you plainly where an agent would pay off.",
+  close: "Book a call and we will tell you, no pitch.",
 }
 
 export const industriesInvite = {

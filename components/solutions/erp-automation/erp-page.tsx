@@ -146,7 +146,7 @@ function LinkedPhrase({
       {parts[0]}
       <Link
         href={href}
-        className="text-finova-cyan hover:text-finova-lightBlue underline-offset-4 hover:underline transition-colors"
+        className="font-medium text-finova-cyan underline-offset-4 transition-colors hover:text-finova-lightBlue hover:underline"
       >
         {phrase}
       </Link>
@@ -192,7 +192,7 @@ function MultiLinkedText({
           <Link
             key={i}
             href={seg.href}
-            className="text-finova-cyan hover:text-finova-lightBlue underline-offset-4 hover:underline transition-colors"
+            className="font-medium text-finova-cyan underline-offset-4 transition-colors hover:text-finova-lightBlue hover:underline"
           >
             {seg.phrase}
           </Link>
@@ -400,12 +400,12 @@ function Problem() {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-finova-magenta/[0.08] via-transparent to-finova-cyan/[0.06]" />
           <div className="relative grid gap-6 p-6 md:grid-cols-[auto_1fr] md:gap-10 md:p-9 lg:p-10">
             <div className="flex flex-col justify-center border-b border-white/10 pb-5 md:border-b-0 md:border-r md:pb-0 md:pr-10">
-              <span className="text-4xl font-bold tracking-tight text-white/25 md:text-5xl">waits</span>
-              <span className="mt-2 max-w-[10rem] text-xs font-light leading-snug text-white/40">
+              <span className="text-4xl font-bold tracking-tight text-white/40 md:text-5xl">waits</span>
+              <span className="mt-2 max-w-[10rem] text-xs font-light leading-snug text-white/55">
                 The gap is that it waits
               </span>
             </div>
-            <p className="text-base font-light leading-relaxed text-white/65 md:text-lg">
+            <p className="text-base font-light leading-relaxed text-white/80 md:text-lg">
               {erpProblem.gap}
             </p>
           </div>
@@ -554,19 +554,14 @@ function HowItRuns() {
             {erpHow.stages.map((s, i) => (
               <li
                 key={s.verb}
-                className="group relative grid grid-cols-[3.5rem_1fr] gap-4 border-t border-white/10 py-7 first:border-t-0 first:pt-0 md:grid-cols-[4.5rem_1fr] md:gap-6 md:py-8"
+                className="group relative grid grid-cols-[auto_1fr] gap-4 border-t border-white/10 py-7 first:border-t-0 first:pt-0 md:gap-6 md:py-8"
               >
-                <div className="flex flex-col">
-                  <span className="font-mono text-[11px] tracking-[0.2em] text-white/30">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className={`mt-2 text-lg font-semibold tracking-tight md:text-xl ${accents[i]}`}
-                  >
-                    {s.verb}
-                  </span>
-                </div>
-                <p className="pt-5 text-base font-light leading-relaxed text-white/65 transition-colors duration-300 group-hover:text-white/80 md:pt-6 md:text-lg">
+                <span
+                  className={`pt-0.5 text-lg font-semibold tracking-tight md:text-xl ${accents[i]}`}
+                >
+                  {s.verb}
+                </span>
+                <p className="text-base font-light leading-relaxed text-white/65 transition-colors duration-300 group-hover:text-white/80 md:text-lg">
                   {s.body}
                 </p>
               </li>
@@ -679,36 +674,234 @@ function WhatThisIsNot() {
 }
 
 function Governance() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-80px" })
+  const sectionRef = useRef<HTMLElement>(null)
+  const inView = useInView(sectionRef, { once: true, margin: "-80px" })
+  const [focus, setFocus] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const resumeTimer = useRef<number | null>(null)
+
+  const accents = [
+    {
+      node: "border-finova-cyan bg-finova-cyan text-finova-midnight",
+      glow: "bg-finova-cyan",
+      label: "text-finova-cyan",
+      line: "from-finova-cyan/60 to-finova-cyan/10",
+    },
+    {
+      node: "border-finova-lightBlue bg-finova-lightBlue text-finova-midnight",
+      glow: "bg-finova-lightBlue",
+      label: "text-finova-lightBlue",
+      line: "from-finova-lightBlue/60 to-finova-lightBlue/10",
+    },
+    {
+      node: "border-finova-magenta bg-finova-magenta text-white",
+      glow: "bg-finova-magenta",
+      label: "text-finova-magenta",
+      line: "from-finova-magenta/60 to-finova-magenta/10",
+    },
+  ] as const
+
+  const selectPhase = (i: number) => {
+    setFocus(i)
+    setPaused(true)
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    resumeTimer.current = window.setTimeout(() => setPaused(false), 10000)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!inView || paused) return
+    const id = window.setInterval(() => {
+      setFocus((n) => (n + 1) % erpGovernance.phases.length)
+    }, 3800)
+    return () => window.clearInterval(id)
+  }, [inView, paused])
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-erp-gov-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  const phase = erpGovernance.phases[focus]
+  const accent = accents[focus]
 
   return (
-    <section ref={ref} className="relative py-20 md:py-28 border-b border-white/5">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-6"
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_15%_0%,rgba(14,165,233,0.12),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_35%_at_90%_80%,rgba(217,70,239,0.1),transparent_50%)]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div data-erp-gov-y className="border-b border-white/10 pb-10 md:pb-12">
+          <h2 className="max-w-3xl text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.65rem] md:leading-[1.1]">
+            {erpGovernance.heading}
+          </h2>
+        </div>
+
+        {/* Control spine + focused phase */}
+        <div
+          data-erp-gov-y
+          className="mt-10 grid gap-10 md:mt-14 lg:grid-cols-[minmax(0,13rem)_1fr] lg:gap-16"
         >
-          {erpGovernance.heading}
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1 }}
-          className="text-white/65 text-base md:text-lg font-light leading-relaxed"
+          <ol className="relative flex flex-row gap-2 lg:flex-col lg:gap-0" role="tablist" aria-label="Governance phases">
+            <span
+              aria-hidden
+              className="absolute bottom-4 left-[1.15rem] top-4 hidden w-px bg-white/10 lg:block"
+            />
+            {erpGovernance.phases.map((p, i) => {
+              const a = accents[i]
+              const active = focus === i
+              return (
+                <li key={p.label} className="relative flex-1 lg:flex-none">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onMouseEnter={() => selectPhase(i)}
+                    onFocus={() => selectPhase(i)}
+                    onClick={() => selectPhase(i)}
+                    className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition-all duration-300 lg:rounded-none lg:border-0 lg:bg-transparent lg:px-0 lg:py-5 ${
+                      active
+                        ? "border-white/20 bg-white/[0.06] lg:bg-transparent"
+                        : "border-white/10 bg-white/[0.02] lg:bg-transparent"
+                    }`}
+                  >
+                    <span
+                      className={`relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border font-mono text-xs font-semibold transition-all duration-300 ${
+                        active
+                          ? a.node
+                          : "border-white/20 bg-[#070d22] text-white/40 group-hover:border-white/35 group-hover:text-white/70"
+                      }`}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                      {active ? (
+                        <span
+                          aria-hidden
+                          className={`absolute inset-0 rounded-full ${a.glow} opacity-30 blur-md`}
+                        />
+                      ) : null}
+                    </span>
+                    <span
+                      className={`text-xs font-bold uppercase tracking-[0.16em] transition-colors duration-300 lg:text-sm ${
+                        active ? a.label : "text-white/40 group-hover:text-white/65"
+                      }`}
+                    >
+                      {p.label}
+                    </span>
+                  </button>
+                </li>
+              )
+            })}
+          </ol>
+
+          <div className="relative min-h-[14rem]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={phase.label}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="relative"
+              >
+                <div
+                  aria-hidden
+                  className={`mb-6 h-px w-24 bg-gradient-to-r ${accent.line}`}
+                />
+                <p className={`mb-4 text-xs font-bold uppercase tracking-[0.2em] ${accent.label}`}>
+                  {phase.label}
+                </p>
+                <p className="max-w-2xl text-xl font-light leading-relaxed text-white/80 sm:text-2xl sm:leading-relaxed md:text-[1.65rem] md:leading-[1.45]">
+                  {phase.label === "scores" ? (
+                    <MultiLinkedText
+                      text={phase.text}
+                      links={[
+                        { phrase: "QualiCore", href: "/solutions/ai-quality-assurance" },
+                      ]}
+                    />
+                  ) : (
+                    phase.text
+                  )}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="mt-10 flex gap-2">
+              {erpGovernance.phases.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  aria-label={`Phase ${i + 1}`}
+                  onClick={() => selectPhase(i)}
+                  className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+                    i === focus
+                      ? accents[i].glow
+                      : i < focus
+                        ? "bg-white/30"
+                        : "bg-white/10"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Autonomy pull statement */}
+        <div
+          data-erp-gov-y
+          className="relative mt-14 overflow-hidden rounded-[1.75rem] border border-finova-magenta/30 md:mt-20"
         >
-          <MultiLinkedText
-            text={erpGovernance.body}
-            links={[
-              { phrase: "QualiCore", href: "/solutions/ai-quality-assurance" },
-              {
-                phrase: erpGovernance.trustAnchor,
-                href: erpGovernance.trustHref,
-              },
-            ]}
-          />
-        </motion.p>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-finova-magenta/[0.14] via-transparent to-finova-cyan/[0.08]" />
+          <div className="pointer-events-none absolute -left-16 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-finova-magenta/25 blur-3xl" />
+          <div className="relative flex gap-5 p-7 md:gap-8 md:p-10 lg:p-12">
+            <span
+              aria-hidden
+              className="mt-1 hidden h-auto w-[3px] shrink-0 rounded-full bg-gradient-to-b from-finova-magenta via-finova-purple to-finova-cyan sm:block"
+            />
+            <p className="text-lg font-medium leading-relaxed text-white/90 md:text-xl md:leading-relaxed lg:text-2xl">
+              {erpGovernance.autonomy}
+            </p>
+          </div>
+        </div>
+
+        {/* Data footer strip */}
+        <div
+          data-erp-gov-y
+          className="mt-6 flex flex-col gap-6 border-t border-white/10 pt-8 md:mt-8 md:flex-row md:items-end md:justify-between md:gap-12"
+        >
+          <p className="max-w-2xl text-base font-light leading-relaxed text-white/55 md:text-lg">
+            {erpGovernance.data}
+          </p>
+          <p className="inline-flex shrink-0 items-center gap-2.5 text-sm font-bold uppercase tracking-[0.14em] text-white/50">
+            <MultiLinkedText
+              text={erpGovernance.coda}
+              links={[
+                {
+                  phrase: erpGovernance.trustAnchor,
+                  href: erpGovernance.trustHref,
+                },
+              ]}
+            />
+            <ArrowRight className="h-4 w-4 text-finova-cyan" aria-hidden />
+          </p>
+        </div>
       </div>
     </section>
   )

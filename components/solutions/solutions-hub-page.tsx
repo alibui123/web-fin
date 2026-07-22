@@ -216,7 +216,7 @@ function Connective() {
                     style={{ transform: `rotate(${angle}deg)` }}
                   >
                     <div
-                      className="absolute left-1/2 top-[8%] z-10 w-[7.5rem]"
+                      className="absolute left-1/2 top-[8%] z-10 w-[9rem] sm:w-[9.5rem]"
                       style={{
                         transform: `translate(-50%, -50%) rotate(${-angle}deg)`,
                       }}
@@ -226,9 +226,9 @@ function Connective() {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={inView ? { opacity: 1, scale: 1 } : {}}
                         transition={{ duration: 0.45, delay: 0.2 + i * 0.1 }}
-                        className="rounded-xl border border-white/15 bg-[#070d22]/95 px-3 py-2.5 text-center shadow-lg backdrop-blur-md"
+                        className="rounded-xl border border-white/15 bg-[#070d22]/95 px-3.5 py-3 text-center shadow-lg backdrop-blur-md"
                       >
-                        <span className="block text-[11px] font-medium leading-snug text-white/75">
+                        <span className="block text-sm font-medium capitalize leading-snug text-white/85 sm:text-[15px]">
                           {job}
                         </span>
                       </motion.div>

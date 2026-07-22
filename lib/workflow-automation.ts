@@ -151,6 +151,19 @@ export const workflowGovernance = {
 export const workflowAudience = {
   heading: "Who this is for",
   body: "Operations leaders carrying hand-run processes across support, back office, verification, scheduling, and field coordination. If the work lives in calls, tickets, records, and follow-ups, and your team spends its day moving cases through a chain of steps, this is built for you. If your problem is a single simple task rather than a chain, we will tell you honestly that a lighter tool may fit better.",
+  // Layout slices — exact text from body, not new copy
+  lead: "Operations leaders carrying hand-run processes across",
+  domains: [
+    "Support",
+    "Back office",
+    "Verification",
+    "Scheduling",
+    "Field coordination",
+  ],
+  surfaces: ["Calls", "Tickets", "Records", "Follow-ups"],
+  fit: "If the work lives in calls, tickets, records, and follow-ups, and your team spends its day moving cases through a chain of steps, this is built for you.",
+  weaker:
+    "If your problem is a single simple task rather than a chain, we will tell you honestly that a lighter tool may fit better.",
 }
 
 export const workflowFaqs = [

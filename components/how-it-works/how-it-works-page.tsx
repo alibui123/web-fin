@@ -1,13 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import dynamic from "next/dynamic"
 import Link from "next/link"
 import { motion, useInView, AnimatePresence } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowRight, ChevronRight, Plus } from "lucide-react"
 import { CALENDLY_URL, clearStickyCta } from "@/lib/site"
+import AutomationCanvas from "@/components/how-it-works/automation-core/AutomationCoreCanvas"
 import {
   howItWorksAudience,
   howItWorksFaqs,
@@ -23,14 +23,6 @@ import {
   howItWorksWhy,
   howItWorksWhyHeading,
 } from "@/lib/how-it-works"
-
-const AutomationCanvas = dynamic(
-  () =>
-    import(
-      "@/components/how-it-works/automation-core/AutomationCoreCanvas"
-    ),
-  { ssr: false },
-)
 
 const faqColors = [
   "from-finova-cyan to-finova-blue",
@@ -109,7 +101,7 @@ function LinkedPhrase({
       {parts[0]}
       <Link
         href={href}
-        className="text-finova-cyan hover:text-finova-lightBlue underline-offset-4 hover:underline transition-colors"
+        className="font-medium text-finova-cyan underline decoration-finova-cyan/50 underline-offset-[3px] transition-colors hover:text-finova-lightBlue hover:decoration-finova-lightBlue"
       >
         {phrase}
       </Link>
@@ -263,7 +255,7 @@ function Model() {
               transition={{ delay: 0.1 + i * 0.08 }}
               className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-7 overflow-hidden"
             >
-              <span className="font-mono text-[11px] tracking-[0.25em] text-finova-cyan mb-4 block">
+              <span className="mb-4 block font-mono text-base tracking-[0.2em] text-finova-cyan sm:text-lg">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <p className="text-white/75 text-base md:text-lg font-light leading-relaxed">
@@ -325,23 +317,29 @@ function Stages() {
         </motion.h2>
 
         {/* Desktop / tablet: stage pills */}
-        <div className="mb-8 hidden overflow-x-auto pb-2 -mx-4 px-4 md:block">
-          <div className="flex min-w-max gap-2 md:gap-3 md:min-w-0 md:flex-wrap">
+        <div className="mb-8 hidden overflow-x-auto overflow-y-hidden pb-2 -mx-4 px-4 md:block">
+          <div className="flex min-w-max gap-3 md:gap-3.5 md:min-w-0 md:flex-wrap">
             {howItWorksStages.map((s, i) => (
               <button
                 key={s.title}
                 type="button"
                 onClick={() => setActive(i)}
-                className={`rounded-full px-4 py-2.5 text-left transition-all duration-300 border ${
+                className={`min-w-[9.5rem] rounded-2xl px-5 py-3.5 text-left transition-all duration-300 border md:min-w-[10.5rem] md:px-6 md:py-4 ${
                   active === i
-                    ? "bg-white text-black border-white"
-                    : "bg-transparent text-white/50 border-white/15 hover:border-white/35 hover:text-white/80"
+                    ? "border-finova-cyan/40 bg-gradient-to-r from-finova-cyan via-finova-lightBlue to-finova-magenta text-white"
+                    : "border-white/15 bg-transparent text-white/50 hover:border-white/35 hover:text-white/80"
                 }`}
               >
-                <span className="font-mono text-[10px] tracking-widest block opacity-70">
+                <span
+                  className={`mb-1 block font-mono text-xs tracking-[0.18em] md:text-[13px] ${
+                    active === i ? "text-white/85" : "opacity-70"
+                  }`}
+                >
                   {s.label}
                 </span>
-                <span className="text-sm font-semibold">{s.title}</span>
+                <span className="block text-base font-semibold leading-snug tracking-tight md:text-lg">
+                  {s.title}
+                </span>
               </button>
             ))}
           </div>
@@ -589,7 +587,7 @@ function Why() {
                   {i === 2 ? (
                     <LinkedPhrase
                       text={item.body}
-                      phrase="governance works"
+                      phrase="See how governance works"
                       href="/solutions/ai-quality-assurance"
                     />
                   ) : i === 0 ? (

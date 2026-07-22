@@ -45,6 +45,19 @@ export const trustCompliance = {
     "We are careful with the language here, because in this area careless language is a liability. We do not claim certifications we do not hold. What we do is design every deployment to meet the requirements of the frameworks that govern your region, and we say exactly that.",
     "Deployments are architected to meet the data-residency and privacy requirements that apply to you, including UAE PDPL and the relevant health-sector guidance in the Emirates, and HIPAA and GDPR principles for the operations we serve internationally. Jurisdiction-specific documentation is prepared per deployment, so what applies to your specific engagement is written down for your specific engagement. If a certification matters to you and we do not yet hold it, we will tell you plainly rather than imply otherwise.",
   ],
+  // Layout slices — exact text from paragraphs, not new copy
+  careful:
+    "We are careful with the language here, because in this area careless language is a liability.",
+  noClaim: "We do not claim certifications we do not hold.",
+  whatWeDo:
+    "What we do is design every deployment to meet the requirements of the frameworks that govern your region, and we say exactly that.",
+  architected:
+    "Deployments are architected to meet the data-residency and privacy requirements that apply to you, including UAE PDPL and the relevant health-sector guidance in the Emirates, and HIPAA and GDPR principles for the operations we serve internationally.",
+  frameworks: ["UAE PDPL", "HIPAA", "GDPR"],
+  documentation:
+    "Jurisdiction-specific documentation is prepared per deployment, so what applies to your specific engagement is written down for your specific engagement.",
+  honesty:
+    "If a certification matters to you and we do not yet hold it, we will tell you plainly rather than imply otherwise.",
 }
 
 export const trustGovernance = {
@@ -65,6 +78,27 @@ export const trustScope = {
 export const trustEscalation = {
   heading: "A human can always step in",
   body: "Sensitive cases, edge cases, and anything outside an agent's scope escalate to your team with the full context attached, so a person picks up exactly where the agent left off, with everything they need. The handoff to a human is designed in as a feature, not treated as a failure, because in a regulated operation the ability to put a person in the loop at the right moment is not a weakness, it is the requirement.",
+  // Layout slices — exact text from body, not new copy
+  triggers: [
+    "Sensitive cases",
+    "edge cases",
+    "anything outside an agent's scope",
+  ],
+  agentLeftOff: "exactly where the agent left off",
+  humanPicksUp: "a person picks up",
+  yourTeam: "your team",
+  contextAttached: "full context attached",
+  everythingNeeded: "with everything they need",
+  handoff:
+    "Sensitive cases, edge cases, and anything outside an agent's scope escalate to your team with the full context attached, so a person picks up exactly where the agent left off, with everything they need.",
+  featurePhrase: "designed in as a feature",
+  failurePhrase: "treated as a failure",
+  featureLine:
+    "The handoff to a human is designed in as a feature, not treated as a failure,",
+  weaknessPhrase: "not a weakness",
+  requirementPhrase: "it is the requirement",
+  requirement:
+    "because in a regulated operation the ability to put a person in the loop at the right moment is not a weakness, it is the requirement.",
 }
 
 export const trustConsent = {
@@ -75,6 +109,19 @@ export const trustConsent = {
 export const trustAudience = {
   heading: "Who this page is for",
   body: "The person who has to answer for what an AI system does inside a regulated or high-trust operation, the compliance lead, the medical director, the CIO, the operations owner in finance or government. If your hesitation about AI is not can it do the job but what happens when something goes wrong and will we be able to account for it, this page is the answer, and the call is where we go through the specifics of your regime.",
+  // Layout slices — exact text from body, not new copy
+  lead: "The person who has to answer for what an AI system does inside a regulated or high-trust operation",
+  roles: [
+    "compliance lead",
+    "medical director",
+    "CIO",
+    "operations owner in finance or government",
+  ],
+  notQuestion: "can it do the job",
+  realQuestion:
+    "what happens when something goes wrong and will we be able to account for it",
+  close:
+    "this page is the answer, and the call is where we go through the specifics of your regime.",
 }
 
 export const trustFaqs = [

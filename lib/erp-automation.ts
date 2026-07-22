@@ -169,6 +169,25 @@ export const erpGovernance = {
   body: "QualiCore, our QA engine, scores every action the agent takes inside your ERP against the standards that matter, shows the reason behind every score in plain language a manager can read, and a person on our team signs off on every change before it ships. You get autonomy without losing control, and drift is caught early instead of after it corrupts a report. Every deployment is architected to meet the data rules of the region it runs in, with zero retention by default and your ERP remaining the system of record. See how we handle data and security.",
   trustAnchor: "data and security",
   trustHref: "/trust",
+  // Layout slices — exact text from body, not new copy
+  phases: [
+    {
+      label: "scores",
+      text: "QualiCore, our QA engine, scores every action the agent takes inside your ERP against the standards that matter,",
+    },
+    {
+      label: "reason",
+      text: "shows the reason behind every score in plain language a manager can read,",
+    },
+    {
+      label: "signs off",
+      text: "and a person on our team signs off on every change before it ships.",
+    },
+  ],
+  autonomy:
+    "You get autonomy without losing control, and drift is caught early instead of after it corrupts a report.",
+  data: "Every deployment is architected to meet the data rules of the region it runs in, with zero retention by default and your ERP remaining the system of record.",
+  coda: "See how we handle data and security.",
 }
 
 export const erpAudience = {

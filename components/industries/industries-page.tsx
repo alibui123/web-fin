@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, type MouseEvent, type ReactNode } from "react"
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react"
 import Link from "next/link"
 import {
   motion,
@@ -668,15 +668,15 @@ function Emerging() {
             </Reveal>
             <Reveal delay={0.08}>
               <div className="mt-8 flex flex-wrap gap-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
-                  <Scale className="h-4 w-4 text-finova-cyan" />
-                  <span className="text-sm text-white/70">
+                <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 md:px-5 md:py-3">
+                  <Scale className="h-5 w-5 shrink-0 text-finova-cyan" />
+                  <span className="text-base font-medium text-white/80 md:text-lg">
                     {industriesEmerging.legalPhrase}
                   </span>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2">
-                  <Truck className="h-4 w-4 text-finova-magenta" />
-                  <span className="text-sm text-white/70">
+                <div className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2.5 md:px-5 md:py-3">
+                  <Truck className="h-5 w-5 shrink-0 text-finova-magenta" />
+                  <span className="text-base font-medium text-white/80 md:text-lg">
                     {industriesEmerging.logisticsPhrase}
                   </span>
                 </div>
@@ -745,34 +745,167 @@ function Proof() {
 }
 
 function NotListed() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [lit, setLit] = useState(0)
+
+  const accents = [
+    { text: "text-finova-cyan", bar: "from-finova-cyan to-finova-lightBlue", dot: "bg-finova-cyan" },
+    { text: "text-finova-lightBlue", bar: "from-finova-lightBlue to-finova-cyan", dot: "bg-finova-lightBlue" },
+    { text: "text-finova-magenta", bar: "from-finova-magenta to-finova-purple", dot: "bg-finova-magenta" },
+  ] as const
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-nl-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+      gsap.from("[data-nl-lit]", {
+        opacity: 0,
+        x: -20,
+        duration: 0.55,
+        stagger: 0.12,
+        ease: "power3.out",
+        clearProps: "all",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 65%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setLit((n) => (n + 1) % industriesNotListed.signals.length)
+    }, 2600)
+    return () => window.clearInterval(id)
+  }, [])
+
+  const listedNames = industriesGrid.items.map((item) => item.name)
+  const marquee = [...listedNames, ...listedNames]
+
   return (
-    <section className="relative border-b border-white/5 py-20 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_100%,rgba(14,165,233,0.1),transparent_55%)]" />
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_80%_10%,rgba(217,70,239,0.1),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_35%_at_10%_90%,rgba(14,165,233,0.08),transparent_50%)]" />
+
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
-            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
-              {industriesNotListed.heading}
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="mt-8 text-base font-light leading-relaxed text-white/60 md:text-lg">
-              <MultiLinkedText
-                text={industriesNotListed.body}
-                links={[
-                  {
-                    phrase: industriesNotListed.auditPhrase,
-                    href: industriesNotListed.auditHref,
-                  },
-                  {
-                    phrase: industriesNotListed.bookPhrase,
-                    href: CALENDLY_URL,
-                    external: true,
-                  },
-                ]}
-              />
-            </p>
-          </Reveal>
+        {/* Listed industries drift — what is on the page */}
+        <div
+          data-nl-y
+          className="relative overflow-hidden border-y border-white/10 py-4"
+          aria-hidden
+        >
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#020617] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#020617] to-transparent" />
+          <motion.div
+            className="flex w-max gap-10 whitespace-nowrap"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 28, ease: "linear", repeat: Infinity }}
+          >
+            {marquee.map((name, i) => (
+              <span
+                key={`${name}-${i}`}
+                className="text-sm font-medium tracking-wide text-white/25"
+              >
+                {name}
+              </span>
+            ))}
+          </motion.div>
+        </div>
+
+        <div data-nl-y className="mt-12 max-w-3xl md:mt-16">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.75rem] md:leading-[1.1]">
+            {industriesNotListed.heading}
+          </h2>
+        </div>
+
+        {/* Work-shape litmus — large stacked signals */}
+        <div
+          data-nl-y
+          className="mt-10 border-t border-white/10 md:mt-14"
+          onMouseLeave={() => setLit(0)}
+        >
+          {industriesNotListed.signals.map((signal, i) => {
+            const accent = accents[i]
+            const active = lit === i
+            return (
+              <button
+                key={signal}
+                type="button"
+                data-nl-lit
+                onMouseEnter={() => setLit(i)}
+                onFocus={() => setLit(i)}
+                className={`group relative flex w-full items-center justify-between gap-6 border-b border-white/10 py-6 text-left transition-colors duration-300 md:py-8 ${
+                  active ? "bg-white/[0.02]" : ""
+                }`}
+              >
+                <span
+                  aria-hidden
+                  className={`absolute inset-y-0 left-0 w-[2px] bg-gradient-to-b ${accent.bar} transition-opacity duration-300 ${
+                    active ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+                <span
+                  className={`pl-4 text-2xl font-bold tracking-tight transition-colors duration-300 md:pl-5 md:text-3xl lg:text-4xl ${
+                    active ? accent.text : "text-white/30 group-hover:text-white/55"
+                  }`}
+                >
+                  {signal}
+                </span>
+                <span
+                  className={`mr-1 h-2 w-2 shrink-0 rounded-full transition-all duration-300 md:mr-2 ${
+                    active ? `${accent.dot} scale-125` : "bg-white/15"
+                  }`}
+                />
+              </button>
+            )
+          })}
+        </div>
+
+        <p
+          data-nl-y
+          className="mt-10 max-w-3xl text-base font-light leading-relaxed text-white/60 md:mt-12 md:text-lg"
+        >
+          {industriesNotListed.fit}
+        </p>
+
+        {/* Honest way — full-bleed action band */}
+        <div
+          data-nl-y
+          className="mt-10 flex flex-col gap-6 border-t border-white/10 pt-8 md:mt-12 md:flex-row md:items-end md:justify-between md:gap-12"
+        >
+          <p className="max-w-xl text-base font-light leading-relaxed text-white/55 md:text-lg">
+            <MultiLinkedText
+              text={industriesNotListed.honest}
+              links={[
+                {
+                  phrase: industriesNotListed.auditPhrase,
+                  href: industriesNotListed.auditHref,
+                },
+              ]}
+            />
+          </p>
+          <p className="inline-flex shrink-0 items-center gap-2.5 text-sm font-bold uppercase tracking-[0.14em] text-white/70">
+            <MultiLinkedText
+              text={industriesNotListed.close}
+              links={[
+                {
+                  phrase: industriesNotListed.bookPhrase,
+                  href: CALENDLY_URL,
+                  external: true,
+                },
+              ]}
+            />
+            <ArrowRight className="h-4 w-4 text-finova-cyan" aria-hidden />
+          </p>
         </div>
       </Container>
     </section>

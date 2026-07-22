@@ -70,7 +70,7 @@ function Reveal({
 
 function Breadcrumb() {
   return (
-    <nav aria-label="Breadcrumb" className="mb-12">
+    <nav aria-label="Breadcrumb" className="mb-8">
       <ol className="flex flex-wrap items-center gap-1.5 text-xs font-medium tracking-wide text-white/40">
         <li>
           <Link href="/" className="hover:text-finova-cyan transition-colors">
@@ -241,7 +241,7 @@ function Hero() {
     <section
       ref={ref}
       onMouseMove={onMove}
-      className="relative overflow-hidden border-b border-white/5 pt-28 pb-16 md:min-h-[92vh] md:pt-32 md:pb-24"
+      className="relative overflow-hidden border-b border-white/5 pt-24 pb-12 md:min-h-[78vh] md:pt-28 md:pb-16"
     >
       <div className="absolute inset-0 bg-finova-midnight" />
 
@@ -252,7 +252,7 @@ function Hero() {
         />
         <motion.div
           style={{ x: glowX, y: glowY }}
-          className="absolute -right-20 bottom-10 h-[440px] w-[440px] rounded-full bg-finova-magenta/20 blur-[110px]"
+          className="absolute -right-20 bottom-10 h-[360px] w-[440px] rounded-full bg-finova-magenta/20 blur-[110px]"
         />
         <div className="absolute left-1/2 top-1/3 h-[280px] w-[280px] -translate-x-1/2 rounded-full bg-finova-purple/10 blur-[90px]" />
       </motion.div>
@@ -268,12 +268,12 @@ function Hero() {
         }}
       />
 
-      <Container className="relative flex min-h-[calc(92vh-7rem)] flex-col">
+      <Container className="relative flex min-h-[calc(78vh-7rem)] flex-col">
         <Breadcrumb />
 
         <motion.div
           style={{ y: contentY, opacity: contentOpacity }}
-          className="grid flex-1 items-center gap-12 lg:grid-cols-12 lg:gap-10"
+          className="grid flex-1 items-center gap-8 lg:grid-cols-12 lg:gap-8"
         >
           <div className="lg:col-span-7 xl:col-span-8">
             <motion.h1
@@ -302,7 +302,7 @@ function Hero() {
               className="mt-8 h-[2px] w-24 origin-left rounded-full bg-gradient-to-r from-finova-cyan to-finova-magenta md:w-32"
             />
 
-            <div className="mt-10 max-w-xl space-y-5">
+            <div className="mt-8 max-w-xl space-y-4">
               {aboutHero.paragraphs.map((p, i) => (
                 <motion.p
                   key={i}
@@ -394,18 +394,18 @@ function Exists() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+      className="relative overflow-hidden border-b border-white/5 py-14 md:py-20"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_0%_0%,rgba(14,165,233,0.1),transparent_55%)]" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 h-56 w-56 rounded-full bg-finova-magenta/8 blur-[100px]" />
 
       <Container>
-        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-14">
+        <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-10">
           <div data-exists-y className="lg:col-span-4 lg:sticky lg:top-28">
             <h2 className="whitespace-nowrap text-3xl font-bold tracking-tight text-white md:text-4xl">
               {aboutExists.heading}
             </h2>
-            <p className="mt-6 text-base font-medium leading-relaxed text-white/55 md:mt-8 md:text-lg">
+            <p className="mt-6 text-base font-medium leading-relaxed text-white/55 md:mt-6 md:text-lg">
               {aboutExists.originLead}
             </p>
           </div>
@@ -423,7 +423,7 @@ function Exists() {
               </p>
             </motion.blockquote>
 
-            <div data-exists-y className="mt-10 border-t border-white/10 pt-10 md:mt-12 md:pt-12">
+            <div data-exists-y className="mt-8 border-t border-white/10 pt-8 md:mt-8 md:pt-8">
               <div className="relative border-l border-l-finova-cyan/35 py-0 pl-6 md:pl-8">
                 <span
                   aria-hidden
@@ -434,7 +434,7 @@ function Exists() {
                 </p>
               </div>
 
-              <div className="relative mt-8 border-l border-l-finova-lightBlue/30 py-0 pl-6 md:mt-10 md:pl-8">
+              <div className="relative mt-8 border-l border-l-finova-lightBlue/30 py-0 pl-6 md:mt-8 md:pl-8">
                 <span
                   aria-hidden
                   className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-finova-lightBlue"
@@ -448,7 +448,7 @@ function Exists() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2, duration: 0.7, ease }}
-                className="mt-8 max-w-2xl border-t border-white/10 pt-8 text-lg font-medium leading-snug text-white md:mt-10 md:pt-10 md:text-xl"
+                className="mt-8 max-w-2xl border-t border-white/10 pt-8 text-lg font-medium leading-snug text-white md:mt-8 md:pt-8 md:text-xl"
               >
                 {aboutExists.responseClose}
               </motion.p>
@@ -464,12 +464,12 @@ function StandFor() {
   const [hovered, setHovered] = useState<number | null>(null)
 
   return (
-    <section className="relative border-b border-white/5 py-20 md:py-28">
+    <section className="relative border-b border-white/5 py-14 md:py-20">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(14,165,233,0.08),transparent_55%)]" />
 
       <Container>
         <Reveal>
-          <h2 className="mx-auto mb-12 max-w-xl text-center text-3xl font-bold tracking-tight text-white md:mb-16 md:text-4xl">
+          <h2 className="mx-auto mb-8 max-w-xl text-center text-3xl font-bold tracking-tight text-white md:mb-10 md:text-4xl">
             {aboutStandFor.heading}
           </h2>
         </Reveal>
@@ -513,7 +513,7 @@ function StandFor() {
 
 function Products() {
   return (
-    <section className="relative overflow-hidden border-b border-white/5 py-20 md:py-28">
+    <section className="relative overflow-hidden border-b border-white/5 py-14 md:py-20">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_10%_0%,rgba(14,165,233,0.08),transparent_50%)]" />
       <Container>
         <Reveal>
@@ -527,11 +527,11 @@ function Products() {
           </p>
         </Reveal>
 
-        <div className="mt-14 space-y-0">
+        <div className="mt-10 space-y-0">
           {aboutProducts.items.map((item, i) => (
             <Reveal key={item.name} delay={0.05 * i}>
               <article
-                className={`group grid gap-4 border-t border-white/10 py-8 md:grid-cols-12 md:gap-8 md:py-10 ${
+                className={`group grid gap-4 border-t border-white/10 py-6 md:grid-cols-12 md:gap-6 md:py-7 ${
                   i === aboutProducts.items.length - 1 ? "border-b" : ""
                 }`}
               >
@@ -584,16 +584,16 @@ function Products() {
 
 function Founder() {
   return (
-    <section className="relative border-b border-white/5 py-20 md:py-28">
+    <section className="relative border-b border-white/5 py-14 md:py-20">
       <Container>
         <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-finova-cyan/[0.08] via-white/[0.02] to-finova-magenta/[0.06]">
           <div className="grid md:grid-cols-12">
-            <div className="relative min-h-[280px] md:col-span-5 md:min-h-full">
+            <div className="relative min-h-[280px] h-full overflow-hidden md:col-span-5">
               <Image
                 src="/team/astafaali.jfif"
                 alt={aboutFounder.name}
                 fill
-                className="object-cover object-top"
+                className="object-cover object-[46%_22%]"
                 sizes="(max-width: 768px) 100vw, 40vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-finova-midnight via-finova-midnight/20 to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-finova-midnight/90" />
@@ -636,42 +636,42 @@ function Team() {
   const slidingImages = [...teamImages, ...teamImages, ...teamImages]
 
   return (
-    <section className="relative overflow-hidden border-b border-white/5 py-20 md:py-28">
+    <section className="relative overflow-hidden border-b border-white/5 py-14 md:py-20">
       <div className="pointer-events-none absolute left-1/4 top-1/2 h-[500px] w-[500px] -translate-y-1/2 rounded-full bg-finova-cyan/5 blur-[120px]" />
       <Container>
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
+        <div className="grid items-center gap-8 lg:grid-cols-12 lg:gap-10">
           <div className="order-2 lg:order-1 lg:col-span-7">
             <Reveal>
-              <div className="relative h-[440px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#080e24]/60 sm:h-[560px]">
+              <div className="relative h-[300px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#080e24]/60 sm:h-[380px]">
                 <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-gradient-to-b from-[#080e24] to-transparent" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-12 bg-gradient-to-t from-[#080e24] to-transparent" />
                 <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#080e24] to-transparent" />
                 <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#080e24] to-transparent" />
 
-                <div className="absolute inset-0 flex flex-col justify-center gap-5 py-5">
+                <div className="absolute inset-0 flex flex-col justify-center gap-4 py-4">
                   <motion.div
-                    className="flex min-w-max gap-5"
+                    className="flex min-w-max gap-4"
                     animate={{ x: [0, -1500] }}
                     transition={{ repeat: Infinity, ease: "linear", duration: 40 }}
                   >
                     {slidingImages.map((img, i) => (
                       <div
                         key={`a-${i}`}
-                        className="relative h-56 w-44 shrink-0 overflow-hidden rounded-2xl border border-white/10 sm:h-64 sm:w-52"
+                        className="relative h-44 w-36 shrink-0 overflow-hidden rounded-2xl border border-white/10 sm:h-52 sm:w-44"
                       >
                         <Image src={img} alt="Team Member" fill className="object-cover" />
                       </div>
                     ))}
                   </motion.div>
                   <motion.div
-                    className="flex min-w-max gap-5"
+                    className="flex min-w-max gap-4"
                     animate={{ x: [-1500, 0] }}
                     transition={{ repeat: Infinity, ease: "linear", duration: 45 }}
                   >
                     {[...slidingImages].reverse().map((img, i) => (
                       <div
                         key={`b-${i}`}
-                        className="relative h-56 w-44 shrink-0 overflow-hidden rounded-2xl border border-white/10 sm:h-64 sm:w-52"
+                        className="relative h-44 w-36 shrink-0 overflow-hidden rounded-2xl border border-white/10 sm:h-52 sm:w-44"
                       >
                         <Image src={img} alt="Team Member" fill className="object-cover" />
                       </div>
@@ -682,7 +682,7 @@ function Team() {
             </Reveal>
           </div>
 
-          <div className="order-1 space-y-6 lg:order-2 lg:col-span-5">
+          <div className="order-1 space-y-4 lg:order-2 lg:col-span-5">
             <Reveal>
               <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
                 {aboutTeam.heading}
@@ -746,13 +746,13 @@ function Credibility() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+      className="relative overflow-hidden border-b border-white/5 py-14 md:py-20"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_0%,rgba(14,165,233,0.12),transparent_58%)]" />
       <div className="pointer-events-none absolute bottom-0 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-finova-magenta/10 blur-[100px]" />
 
       <Container>
-        <div data-cred className="mx-auto mb-10 max-w-2xl text-center md:mb-14">
+        <div data-cred className="mx-auto mb-10 max-w-2xl text-center md:mb-10">
           <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-[2.75rem]">
             {aboutCredibility.heading}
           </h2>
@@ -841,7 +841,7 @@ function Proof() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+      className="relative overflow-hidden border-b border-white/5 py-14 md:py-20"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_65%_50%_at_50%_100%,rgba(217,70,239,0.1),transparent_55%)]" />
       <div className="pointer-events-none absolute left-1/2 top-0 h-56 w-[28rem] -translate-x-1/2 rounded-full bg-finova-cyan/10 blur-[90px]" />
@@ -855,7 +855,7 @@ function Proof() {
 
         <p
           data-proof
-          className="mx-auto mb-12 max-w-2xl text-center text-base font-light leading-relaxed text-white/60 md:mb-14 md:text-lg"
+          className="mx-auto mb-8 max-w-2xl text-center text-base font-light leading-relaxed text-white/60 md:mb-10 md:text-lg"
         >
           {intro}
         </p>
@@ -892,7 +892,7 @@ function Proof() {
 
         <p
           data-proof
-          className="mt-10 text-center text-base font-light text-white/55 md:mt-12 md:text-lg"
+          className="mt-8 text-center text-base font-light text-white/55 md:mt-8 md:text-lg"
         >
           <MultiLinkedText
             text={close}
@@ -911,7 +911,7 @@ function Proof() {
 
 function Invite() {
   return (
-    <section className="relative overflow-hidden py-24 md:py-32">
+    <section className="relative overflow-hidden py-16 md:py-24">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_100%,rgba(14,165,233,0.18),transparent_65%)]" />
       <Container className="text-center">
         <Reveal>
@@ -940,7 +940,7 @@ function Invite() {
         <Reveal delay={0.24}>
           <nav
             aria-label="Related pages"
-            className="mt-16 flex flex-wrap items-center justify-center gap-y-2 text-sm text-white/35"
+            className="mt-10 flex flex-wrap items-center justify-center gap-y-2 text-sm text-white/35"
           >
             {aboutSiblings.map((s, i) => (
               <span key={s.href} className="inline-flex items-center">

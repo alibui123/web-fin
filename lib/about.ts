@@ -73,12 +73,10 @@ export const aboutProducts = {
     {
       name: "Awaaz Labs",
       body: "Awaaz Labs is our voice AI platform and flagship product line, the home of our conversational agents, including Layla, our pre-built AI front desk agent.",
-      href: "/products/awaaz-labs",
     },
     {
       name: "QualiCore",
       body: "QualiCore is our QA engine, the governance core that scores every interaction our agents have, with QualiCall as the conversational QA agent built on it.",
-      href: "/products/qualicore",
     },
     {
       name: "MehmaanNawaz",

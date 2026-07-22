@@ -307,6 +307,10 @@ function Hero() {
                                 phrase: "finance",
                                 href: "/industries/financial-services",
                               },
+                              {
+                                phrase: "government",
+                                href: "/industries/government",
+                              },
                             ]
                           : []
                       }
@@ -392,9 +396,6 @@ function DataPosture() {
                   <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-finova-cyan transition-colors group-hover:border-finova-cyan/30 group-hover:bg-finova-cyan/10">
                     <Icon className="h-5 w-5" strokeWidth={1.5} />
                   </div>
-                  <span className="mb-3 font-mono text-[11px] tracking-[0.2em] text-white/35">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
                   <h3 className="mb-3 text-lg font-semibold tracking-tight text-white md:text-xl">
                     {lead}
                   </h3>
@@ -413,47 +414,213 @@ function DataPosture() {
 
 function Compliance() {
   const sectionRef = useRef<HTMLElement>(null)
+  const inView = useInView(sectionRef, { once: true, margin: "-80px" })
+  const [hotFrame, setHotFrame] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const resumeTimer = useRef<number | null>(null)
+
+  const frameAccents = [
+    "text-finova-cyan",
+    "text-finova-lightBlue",
+    "text-finova-magenta",
+  ] as const
+
+  const highlightClass = [
+    "text-finova-cyan underline decoration-finova-cyan/50 underline-offset-4",
+    "text-finova-lightBlue underline decoration-finova-lightBlue/50 underline-offset-4",
+    "text-finova-magenta underline decoration-finova-magenta/50 underline-offset-4",
+  ] as const
+
+  const selectFrame = (i: number) => {
+    setHotFrame(i)
+    setPaused(true)
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    resumeTimer.current = window.setTimeout(() => setPaused(false), 10000)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) window.clearTimeout(resumeTimer.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!inView || paused) return
+    const id = window.setInterval(() => {
+      setHotFrame((n) => (n + 1) % trustCompliance.frameworks.length)
+    }, 3400)
+    return () => window.clearInterval(id)
+  }, [inView, paused])
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
     const ctx = gsap.context(() => {
-      gsap.from("[data-comp]", {
-        y: 32,
+      gsap.from("[data-comp-y]", {
+        y: 28,
         duration: 0.8,
-        stagger: 0.12,
+        stagger: 0.1,
         ease: "power3.out",
         clearProps: "transform",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 75%", once: true },
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
       })
     }, sectionRef)
     return () => ctx.revert()
   }, [])
 
+  function highlightFramework(text: string, active: string, activeIndex: number) {
+    const parts = text.split(active)
+    if (parts.length < 2) return <>{text}</>
+    return (
+      <>
+        {parts[0]}
+        <motion.span
+          key={active}
+          initial={{ opacity: 0.45 }}
+          animate={{ opacity: 1 }}
+          className={`font-medium ${highlightClass[activeIndex]}`}
+        >
+          {active}
+        </motion.span>
+        {parts.slice(1).join(active)}
+      </>
+    )
+  }
+
   return (
     <section
       ref={sectionRef}
-      className="relative border-b border-white/5 py-20 md:py-28"
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_100%_20%,rgba(147,51,234,0.1),transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_50%_0%,rgba(14,165,233,0.09),transparent_55%)]" />
+
       <Container>
-        <div className="mx-auto max-w-3xl">
-          <h2
-            data-comp
-            className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-[2.75rem]"
-          >
-            {trustCompliance.heading}
-          </h2>
-          <div className="mt-8 space-y-6">
-            {trustCompliance.paragraphs.map((p, i) => (
-              <p
-                key={i}
-                data-comp
-                className="text-base font-light leading-relaxed text-white/60 md:text-lg"
-              >
-                {p}
-              </p>
-            ))}
+        {/* Split heading — mirrors the comma in the title */}
+        <h2
+          data-comp-y
+          className="grid gap-6 border-b border-white/10 pb-10 md:grid-cols-2 md:gap-12 md:pb-14"
+        >
+          <span className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-[2.65rem] lg:leading-[1.12]">
+            Architected to meet the rules
+          </span>
+          <span className="self-end text-3xl font-bold tracking-tight text-white/35 md:text-right md:text-4xl lg:text-[2.65rem] lg:leading-[1.12]">
+            honestly stated
+          </span>
+        </h2>
+
+        <p
+          data-comp-y
+          className="mt-8 max-w-2xl text-base font-light leading-relaxed text-white/55 md:mt-10 md:text-lg"
+        >
+          {trustCompliance.careful}
+        </p>
+
+        {/* Claim polarity — will not / will */}
+        <div
+          data-comp-y
+          className="mt-10 grid gap-0 overflow-hidden rounded-[1.75rem] border border-white/10 md:mt-12 md:grid-cols-2"
+        >
+          <div className="relative border-b border-white/10 bg-white/[0.02] p-7 md:border-b-0 md:border-r md:p-9 lg:p-10">
+            <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/40">
+              <Ban className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+            </div>
+            <p className="text-base font-light leading-relaxed text-white/45 md:text-lg">
+              {trustCompliance.noClaim}
+            </p>
           </div>
+          <div className="relative bg-gradient-to-br from-finova-cyan/[0.12] via-[#070d22]/80 to-transparent p-7 md:p-9 lg:p-10">
+            <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-finova-cyan/20 blur-3xl" />
+            <div className="relative mb-5 flex h-10 w-10 items-center justify-center rounded-full border border-finova-cyan/40 bg-finova-cyan/15 text-finova-cyan">
+              <Check className="h-4 w-4" strokeWidth={2} aria-hidden />
+            </div>
+            <p className="relative text-base font-medium leading-relaxed text-white/85 md:text-lg">
+              {trustCompliance.whatWeDo}
+            </p>
+          </div>
+        </div>
+
+        {/* Jurisdiction index + body */}
+        <div
+          data-comp-y
+          className="mt-12 grid gap-10 border-t border-white/10 pt-10 md:mt-16 md:grid-cols-12 md:gap-12 md:pt-14"
+        >
+          <ol
+            className="flex flex-row flex-wrap gap-x-6 gap-y-3 md:col-span-4 md:flex-col md:gap-5"
+            role="tablist"
+            aria-label="Frameworks"
+          >
+            {trustCompliance.frameworks.map((frame, i) => {
+              const active = hotFrame === i
+              return (
+                <li key={frame}>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onMouseEnter={() => selectFrame(i)}
+                    onFocus={() => selectFrame(i)}
+                    onClick={() => selectFrame(i)}
+                    className={`flex items-baseline gap-3 text-left transition-colors duration-300 ${
+                      active
+                        ? frameAccents[i]
+                        : "text-white/30 hover:text-white/60"
+                    }`}
+                  >
+                    <span className="font-mono text-[10px] tracking-[0.2em] opacity-60">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={`text-2xl font-bold tracking-tight md:text-3xl ${
+                        active ? "" : "font-semibold"
+                      }`}
+                    >
+                      {frame}
+                    </span>
+                  </button>
+                </li>
+              )
+            })}
+          </ol>
+
+          <div className="md:col-span-8 md:border-l md:border-white/10 md:pl-10 lg:pl-12">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={trustCompliance.frameworks[hotFrame]}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <p className="text-base font-light leading-relaxed text-white/70 md:text-lg lg:text-xl lg:leading-relaxed">
+                  {highlightFramework(
+                    trustCompliance.architected,
+                    trustCompliance.frameworks[hotFrame],
+                    hotFrame,
+                  )}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+
+            <p className="mt-8 text-base font-light leading-relaxed text-white/50 md:mt-10 md:text-lg">
+              {trustCompliance.documentation}
+            </p>
+          </div>
+        </div>
+
+        {/* Closing stamp */}
+        <div
+          data-comp-y
+          className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 md:mt-16 md:flex-row md:items-center md:justify-between md:gap-10"
+        >
+          <p className="max-w-2xl text-base font-medium leading-relaxed text-white/80 md:text-lg">
+            {trustCompliance.honesty}
+          </p>
+          <span
+            aria-hidden
+            className="hidden h-px flex-1 bg-gradient-to-r from-white/15 to-transparent md:block"
+          />
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30">
+            plainly
+          </span>
         </div>
       </Container>
     </section>
@@ -647,7 +814,6 @@ function Governance() {
 
 function ScopeExample() {
   const sectionRef = useRef<HTMLElement>(null)
-  const inView = useInView(sectionRef, { once: true, margin: "-10% 0px" })
 
   // Exact phrases from the body — visual hierarchy only
   const allowed = ["a first name", "a phone number", "a treatment interest"] as const
@@ -740,24 +906,14 @@ function ScopeExample() {
                 </div>
 
                 {/* Architectural boundary */}
-                <div className="relative px-5 py-4 sm:px-6">
+                <div className="relative flex items-center justify-center px-5 py-5 sm:px-6">
                   <div
                     data-scope-wall
-                    className="h-px w-full origin-left bg-gradient-to-r from-finova-cyan via-finova-magenta to-transparent"
+                    className="absolute inset-x-5 top-1/2 h-px -translate-y-1/2 origin-left bg-gradient-to-r from-finova-cyan via-finova-magenta to-transparent sm:inset-x-6"
                   />
-                  <motion.div
-                    animate={
-                      inView
-                        ? { opacity: [0.4, 1, 0.4], scale: [0.92, 1, 0.92] }
-                        : {}
-                    }
-                    transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center"
-                  >
-                    <span className="rounded-full border border-white/15 bg-[#070d22] px-3 py-1 font-mono text-[9px] uppercase tracking-[0.22em] text-white/45">
-                      and nothing else
-                    </span>
-                  </motion.div>
+                  <span className="relative z-[1] rounded-full border border-finova-cyan/40 bg-[#070d22] px-4 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-finova-cyan shadow-[0_0_0_4px_#070d22] sm:text-xs sm:tracking-[0.2em]">
+                    and nothing else
+                  </span>
                 </div>
 
                 {/* Out: exact exclusions */}
@@ -792,24 +948,230 @@ function ScopeExample() {
 }
 
 function Escalation() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const splitRef = useRef<HTMLDivElement>(null)
+  const [split, setSplit] = useState(52)
+  const [dragging, setDragging] = useState(false)
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-esc-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  const updateSplit = (clientX: number) => {
+    const el = splitRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const next = ((clientX - rect.left) / rect.width) * 100
+    setSplit(Math.min(78, Math.max(22, next)))
+  }
+
+  useEffect(() => {
+    if (!dragging) return
+    const onMove = (e: PointerEvent) => updateSplit(e.clientX)
+    const onUp = () => setDragging(false)
+    window.addEventListener("pointermove", onMove)
+    window.addEventListener("pointerup", onUp)
+    return () => {
+      window.removeEventListener("pointermove", onMove)
+      window.removeEventListener("pointerup", onUp)
+    }
+  }, [dragging])
+
+  function renderFeatureLine(text: string, feature: string, failure: string) {
+    const before = text.split(feature)[0]
+    const afterFeature = text.split(feature)[1] ?? ""
+    const mid = afterFeature.split(failure)[0]
+    const afterFailure = afterFeature.split(failure).slice(1).join(failure)
+    return (
+      <>
+        {before}
+        <span className="font-medium text-finova-cyan">{feature}</span>
+        {mid}
+        <span className="text-white/30 line-through decoration-white/25">{failure}</span>
+        {afterFailure}
+      </>
+    )
+  }
+
+  function renderRequirement(text: string, weakness: string, requirement: string) {
+    const before = text.split(weakness)[0]
+    const afterWeak = text.split(weakness)[1] ?? ""
+    const mid = afterWeak.split(requirement)[0]
+    const afterReq = afterWeak.split(requirement).slice(1).join(requirement)
+    return (
+      <>
+        {before}
+        <span className="text-white/30 line-through decoration-white/25">{weakness}</span>
+        {mid}
+        <span className="font-semibold text-finova-magenta">{requirement}</span>
+        {afterReq}
+      </>
+    )
+  }
+
   return (
-    <section className="relative border-b border-white/5 py-20 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_40%_at_100%_50%,rgba(217,70,239,0.08),transparent_50%)]" />
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_80%_20%,rgba(217,70,239,0.12),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_45%_35%_at_10%_80%,rgba(14,165,233,0.08),transparent_50%)]" />
+
       <Container>
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
-            <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-finova-magenta/30 bg-finova-magenta/10 text-finova-magenta">
-              <UserCheck className="h-7 w-7" strokeWidth={1.5} />
+        <div data-esc-y className="max-w-3xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-[2.65rem] lg:leading-[1.1]">
+            {trustEscalation.heading}
+          </h2>
+          <ul className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
+            {trustEscalation.triggers.map((trigger, i) => (
+              <li
+                key={trigger}
+                className="inline-flex items-center gap-2.5 text-sm font-light text-white/50 md:text-[15px]"
+              >
+                {i > 0 ? (
+                  <span aria-hidden className="hidden text-white/20 sm:inline">
+                    ·
+                  </span>
+                ) : null}
+                <span>{trigger}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Signature: draggable agent ↔ human context transfer */}
+        <div
+          data-esc-y
+          ref={splitRef}
+          className="relative mt-10 h-[22rem] overflow-hidden rounded-[1.75rem] border border-white/10 select-none md:mt-14 md:h-[26rem]"
+          onPointerMove={(e) => {
+            if (dragging) return
+            // Hover follow on desktop (light assist), full drag always works
+            if (e.pointerType === "mouse" && !dragging) updateSplit(e.clientX)
+          }}
+          onPointerLeave={() => {
+            if (!dragging) setSplit(52)
+          }}
+        >
+          {/* Agent side (left) */}
+          <div
+            className="absolute inset-0 bg-[#070d22]"
+            style={{
+              clipPath: `inset(0 ${100 - split}% 0 0)`,
+            }}
+          >
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_20%_40%,rgba(255,255,255,0.04),transparent_60%)]" />
+            <div className="flex h-full max-w-[min(100%,28rem)] flex-col justify-center p-7 md:p-10 lg:p-12">
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30">
+                agent
+              </span>
+              <p className="mt-4 text-2xl font-bold tracking-tight text-white/40 md:text-3xl lg:text-4xl">
+                {trustEscalation.agentLeftOff}
+              </p>
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
-              {trustEscalation.heading}
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <p className="mt-8 text-base font-light leading-relaxed text-white/60 md:text-lg">
-              {trustEscalation.body}
+          </div>
+
+          {/* Human side (right) */}
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0b1228] to-[#1a0a24]"
+            style={{
+              clipPath: `inset(0 0 0 ${split}%)`,
+            }}
+          >
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_50%_at_80%_30%,rgba(217,70,239,0.2),transparent_55%)]" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_70%_80%,rgba(14,165,233,0.15),transparent_50%)]" />
+            <div className="ml-auto flex h-full max-w-[min(100%,28rem)] flex-col justify-between p-7 text-right md:p-10 lg:p-12">
+              <div>
+                <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-finova-magenta">
+                  <UserCheck className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden />
+                  {trustEscalation.yourTeam}
+                </span>
+                <p className="mt-4 text-2xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
+                  {trustEscalation.humanPicksUp}
+                </p>
+              </div>
+              <p className="ml-auto max-w-xs text-sm font-light leading-relaxed text-white/55 md:text-[15px]">
+                {trustEscalation.everythingNeeded}
+              </p>
+            </div>
+          </div>
+
+          {/* Draggable context seam */}
+          <div
+            className="absolute inset-y-0 z-20 w-px -translate-x-1/2 bg-gradient-to-b from-finova-cyan via-white/60 to-finova-magenta"
+            style={{ left: `${split}%` }}
+          >
+            <button
+              type="button"
+              aria-label="Drag to transfer context"
+              className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 cursor-ew-resize flex-col items-center gap-2"
+              onPointerDown={(e) => {
+                e.preventDefault()
+                setDragging(true)
+                updateSplit(e.clientX)
+              }}
+            >
+              <span className="rounded-full border border-white/25 bg-[#070d22] px-3 py-2 shadow-[0_0_24px_rgba(14,165,233,0.35)] backdrop-blur-md">
+                <span className="flex items-center gap-1.5">
+                  <span className="h-1 w-1 rounded-full bg-finova-cyan" />
+                  <span className="h-1 w-1 rounded-full bg-white/50" />
+                  <span className="h-1 w-1 rounded-full bg-finova-magenta" />
+                </span>
+              </span>
+              <span className="hidden whitespace-nowrap rounded-full border border-white/15 bg-[#070d22]/95 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-white/70 sm:inline-block">
+                {trustEscalation.contextAttached}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Full handoff sentence */}
+        <p
+          data-esc-y
+          className="mt-8 max-w-3xl text-base font-light leading-relaxed text-white/55 md:mt-10 md:text-lg"
+        >
+          {trustEscalation.handoff}
+        </p>
+
+        {/* Feature / failure + requirement */}
+        <div data-esc-y className="mt-10 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-5">
+          <div className="relative overflow-hidden rounded-2xl border border-finova-cyan/25 bg-gradient-to-br from-finova-cyan/[0.1] via-transparent to-transparent p-6 md:p-8">
+            <div
+              aria-hidden
+              className="mb-5 h-px w-12 bg-gradient-to-r from-finova-cyan to-transparent"
+            />
+            <p className="text-base font-light leading-relaxed text-white/70 md:text-lg">
+              {renderFeatureLine(
+                trustEscalation.featureLine,
+                trustEscalation.featurePhrase,
+                trustEscalation.failurePhrase,
+              )}
             </p>
-          </Reveal>
+          </div>
+          <div className="relative overflow-hidden rounded-2xl border border-finova-magenta/25 bg-gradient-to-br from-finova-magenta/[0.12] via-transparent to-transparent p-6 md:p-8">
+            <div
+              aria-hidden
+              className="mb-5 h-px w-12 bg-gradient-to-r from-finova-magenta to-transparent"
+            />
+            <p className="text-base font-light leading-relaxed text-white/70 md:text-lg">
+              {renderRequirement(
+                trustEscalation.requirement,
+                trustEscalation.weaknessPhrase,
+                trustEscalation.requirementPhrase,
+              )}
+            </p>
+          </div>
         </div>
       </Container>
     </section>
@@ -818,7 +1180,6 @@ function Escalation() {
 
 function Consent() {
   const sectionRef = useRef<HTMLElement>(null)
-  const inView = useInView(sectionRef, { once: true, margin: "-12% 0px" })
 
   // Exact phrases from the body — visual hierarchy only
   const regimes = [
@@ -880,28 +1241,20 @@ function Consent() {
                     {/* Mobile separator */}
                     <div className="flex w-full items-center gap-3 md:hidden">
                       <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#070d22] px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white/50">
-                        <Split className="h-3 w-3 text-white/40" />
+                      <span className="inline-flex items-center gap-2 rounded-full border border-finova-cyan/40 bg-[#070d22] px-4 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-finova-cyan sm:text-xs">
+                        <Split className="h-3.5 w-3.5 shrink-0 text-finova-cyan" />
                         We keep them separate
                       </span>
                       <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                     </div>
                     {/* Desktop vertical separator */}
                     <div className="absolute inset-y-4 left-1/2 hidden w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-white/25 to-transparent md:block" />
-                    <motion.div
-                      animate={
-                        inView
-                          ? { scale: [1, 1.06, 1], opacity: [0.85, 1, 0.85] }
-                          : {}
-                      }
-                      transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-                      className="relative z-10 hidden max-w-[7.5rem] flex-col items-center gap-2 rounded-2xl border border-white/12 bg-[#070d22] px-3 py-4 text-center md:flex"
-                    >
-                      <Ban className="h-4 w-4 text-white/40" strokeWidth={2} />
-                      <span className="font-mono text-[9px] leading-snug uppercase tracking-[0.16em] text-white/50">
+                    <div className="relative z-10 hidden max-w-[9rem] flex-col items-center gap-2.5 rounded-2xl border border-finova-cyan/40 bg-[#070d22] px-4 py-4 text-center shadow-[0_0_0_4px_rgba(7,13,34,0.9)] md:flex">
+                      <Ban className="h-4 w-4 text-finova-cyan" strokeWidth={2} />
+                      <span className="font-mono text-[11px] font-semibold leading-snug uppercase tracking-[0.14em] text-finova-cyan sm:text-xs">
                         We keep them separate
                       </span>
-                    </motion.div>
+                    </div>
                   </div>
                 ) : null}
 
@@ -943,26 +1296,174 @@ function Consent() {
 }
 
 function Audience() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [hotSeat, setHotSeat] = useState(0)
+
+  const seatAccents = [
+    {
+      active: "border-finova-cyan/45 bg-finova-cyan/10 text-finova-cyan",
+      glow: "bg-finova-cyan/25",
+      plate: "from-finova-cyan/20 to-transparent",
+    },
+    {
+      active: "border-finova-lightBlue/45 bg-finova-lightBlue/10 text-finova-lightBlue",
+      glow: "bg-finova-lightBlue/25",
+      plate: "from-finova-lightBlue/20 to-transparent",
+    },
+    {
+      active: "border-finova-magenta/45 bg-finova-magenta/10 text-finova-magenta",
+      glow: "bg-finova-magenta/25",
+      plate: "from-finova-magenta/20 to-transparent",
+    },
+    {
+      active: "border-finova-purple/45 bg-finova-purple/10 text-finova-purple",
+      glow: "bg-finova-purple/25",
+      plate: "from-finova-purple/20 to-transparent",
+    },
+  ] as const
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-aud-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+      gsap.from("[data-aud-seat]", {
+        opacity: 0,
+        y: 18,
+        duration: 0.55,
+        stagger: 0.08,
+        ease: "power3.out",
+        clearProps: "all",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 68%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setHotSeat((n) => (n + 1) % trustAudience.roles.length)
+    }, 2800)
+    return () => window.clearInterval(id)
+  }, [])
+
+  function roleWithLinks(role: string) {
+    return (
+      <MultiLinkedText
+        text={role}
+        links={[
+          { phrase: "finance", href: "/industries/financial-services" },
+          { phrase: "government", href: "/industries/government" },
+        ]}
+      />
+    )
+  }
+
   return (
-    <section className="relative border-b border-white/5 py-20 md:py-28">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_0%,rgba(14,165,233,0.08),transparent_55%)]" />
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_0%,rgba(14,165,233,0.1),transparent_55%)]" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-finova-magenta/10 blur-[100px]" />
+
       <Container>
-        <Reveal>
-          <h2 className="mx-auto max-w-xl text-center text-3xl font-bold tracking-tight text-white md:text-4xl">
+        <div data-aud-y className="mx-auto max-w-2xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-white md:text-4xl lg:text-[2.65rem]">
             {trustAudience.heading}
           </h2>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <p className="mx-auto mt-8 max-w-3xl text-center text-base font-light leading-relaxed text-white/60 md:text-lg">
-            <MultiLinkedText
-              text={trustAudience.body}
-              links={[
-                { phrase: "finance", href: "/industries/financial-services" },
-                { phrase: "government", href: "/industries/government" },
-              ]}
-            />
+          <p className="mt-6 text-base font-light leading-relaxed text-white/55 md:text-lg">
+            {trustAudience.lead}
           </p>
-        </Reveal>
+        </div>
+
+        {/* Accountability seats — board-table nameplates */}
+        <div
+          data-aud-y
+          className="relative mx-auto mt-12 max-w-4xl md:mt-16"
+          onMouseLeave={() => setHotSeat(0)}
+        >
+          {/* Table surface */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-8 bottom-0 top-1/2 rounded-[2rem] border border-white/[0.06] bg-gradient-to-b from-white/[0.03] to-transparent md:inset-x-16"
+          />
+
+          <div className="relative grid gap-3 sm:grid-cols-2">
+            {trustAudience.roles.map((role, i) => {
+              const accent = seatAccents[i]
+              const active = hotSeat === i
+              return (
+                <button
+                  key={role}
+                  type="button"
+                  data-aud-seat
+                  onMouseEnter={() => setHotSeat(i)}
+                  onFocus={() => setHotSeat(i)}
+                  className={`group relative overflow-hidden rounded-2xl border px-5 py-5 text-left transition-all duration-300 md:px-7 md:py-6 ${
+                    active
+                      ? accent.active
+                      : "border-white/10 bg-[#070d22]/80 text-white/45 hover:border-white/20 hover:text-white/70"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl transition-opacity duration-500 ${accent.glow} ${
+                      active ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                  <span
+                    aria-hidden
+                    className={`mb-4 block h-[2px] w-10 bg-gradient-to-r ${accent.plate} transition-opacity duration-300 ${
+                      active ? "opacity-100" : "opacity-40"
+                    }`}
+                  />
+                  <span className="relative block text-base font-semibold tracking-tight md:text-lg">
+                    {roleWithLinks(role)}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Hesitation flip — not this question / but this one */}
+        <div
+          data-aud-y
+          className="mx-auto mt-12 grid max-w-4xl gap-0 overflow-hidden rounded-[1.75rem] border border-white/10 md:mt-16 md:grid-cols-2"
+        >
+          <div className="border-b border-white/10 bg-white/[0.02] p-7 md:border-b-0 md:border-r md:p-9">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
+              not
+            </p>
+            <p className="mt-4 text-lg font-light leading-relaxed text-white/35 line-through decoration-white/25 md:text-xl">
+              {trustAudience.notQuestion}
+            </p>
+          </div>
+          <div className="relative bg-gradient-to-br from-finova-cyan/[0.12] via-[#070d22]/90 to-finova-magenta/[0.08] p-7 md:p-9">
+            <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-finova-cyan/20 blur-3xl" />
+            <p className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-finova-cyan">
+              but
+            </p>
+            <p className="relative mt-4 text-lg font-medium leading-relaxed text-white/90 md:text-xl md:leading-relaxed">
+              {trustAudience.realQuestion}
+            </p>
+          </div>
+        </div>
+
+        {/* Close */}
+        <p
+          data-aud-y
+          className="mx-auto mt-10 max-w-2xl text-center text-base font-light leading-relaxed text-white/55 md:mt-12 md:text-lg"
+        >
+          {trustAudience.close}
+        </p>
       </Container>
     </section>
   )

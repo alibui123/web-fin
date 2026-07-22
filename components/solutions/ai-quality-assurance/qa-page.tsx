@@ -752,36 +752,174 @@ function Buyer() {
 }
 
 function DataRules() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-70px" })
+  const sectionRef = useRef<HTMLElement>(null)
+  const [hotPillar, setHotPillar] = useState(0)
+
+  const pillarAccents = [
+    "border-finova-cyan/50 bg-finova-cyan/12 text-finova-cyan",
+    "border-finova-lightBlue/50 bg-finova-lightBlue/12 text-finova-lightBlue",
+    "border-finova-magenta/50 bg-finova-magenta/12 text-finova-magenta",
+  ] as const
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger)
+    const ctx = gsap.context(() => {
+      gsap.from("[data-qa-data-y]", {
+        y: 28,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        clearProps: "transform",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 72%", once: true },
+      })
+    }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setHotPillar((n) => (n + 1) % qaData.pillars.length)
+    }, 3000)
+    return () => window.clearInterval(id)
+  }, [])
+
+  function highlightRules(text: string, activePillar: string) {
+    const parts = text.split(activePillar)
+    if (parts.length < 2) return <>{text}</>
+    return (
+      <>
+        {parts[0]}
+        <motion.span
+          key={activePillar}
+          initial={{ opacity: 0.45 }}
+          animate={{ opacity: 1 }}
+          className="font-medium text-white underline decoration-finova-cyan/50 underline-offset-4"
+        >
+          {activePillar}
+        </motion.span>
+        {parts.slice(1).join(activePillar)}
+      </>
+    )
+  }
+
+  function renderDesignedIn(text: string, designed: string, bolted: string) {
+    const beforeDesigned = text.split(designed)[0]
+    const afterDesigned = text.split(designed)[1] ?? ""
+    const mid = afterDesigned.split(bolted)[0]
+    const afterBolted = afterDesigned.split(bolted).slice(1).join(bolted)
+    return (
+      <>
+        {beforeDesigned}
+        <span className="font-medium text-finova-cyan">{designed}</span>
+        {mid}
+        <span className="text-white/30 line-through decoration-white/25">{bolted}</span>
+        {afterBolted}
+      </>
+    )
+  }
 
   return (
     <section
-      ref={ref}
-      className="relative py-16 md:py-20 border-b border-white/5 bg-gradient-to-r from-finova-cyan/[0.05] via-transparent to-finova-purple/[0.05]"
+      ref={sectionRef}
+      className="relative overflow-hidden border-b border-white/5 py-20 md:py-28"
     >
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-2xl md:text-3xl font-bold text-white tracking-tight mb-5"
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_20%_0%,rgba(14,165,233,0.1),transparent_55%)]" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-finova-purple/10 blur-[110px]" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div data-qa-data-y className="max-w-3xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-[2.65rem] md:leading-[1.1]">
+            {qaData.heading}
+          </h2>
+          <p className="mt-5 text-base font-light leading-relaxed text-white/60 md:text-lg">
+            <MultiLinkedText
+              text={qaData.lead}
+              links={[{ phrase: "QualiCore", href: "/products/qualicore" }]}
+            />
+          </p>
+        </div>
+
+        {/* Region rule pillars */}
+        <div
+          data-qa-data-y
+          className="mt-10 grid gap-3 sm:grid-cols-3 md:mt-12 md:gap-4"
+          onMouseLeave={() => setHotPillar(0)}
         >
-          {qaData.heading}
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08 }}
-          className="text-white/65 text-base md:text-lg font-light leading-relaxed"
+          {qaData.pillars.map((pillar, i) => {
+            const active = hotPillar === i
+            return (
+              <button
+                key={pillar}
+                type="button"
+                onMouseEnter={() => setHotPillar(i)}
+                onFocus={() => setHotPillar(i)}
+                className={`rounded-2xl border px-5 py-4 text-left text-sm font-bold uppercase tracking-[0.12em] transition-all duration-300 md:px-6 md:py-5 md:text-[13px] ${
+                  active
+                    ? pillarAccents[i]
+                    : "border-white/10 bg-white/[0.02] text-white/40 hover:border-white/20 hover:text-white/65"
+                }`}
+              >
+                {pillar}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Rules body with live pillar highlight */}
+        <div
+          data-qa-data-y
+          className="relative mt-5 overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#070d22]/75 p-7 backdrop-blur-md md:mt-6 md:p-10 lg:p-12"
         >
-          <MultiLinkedText
-            text={qaData.body}
-            links={[
-              { phrase: "QualiCore", href: "/products/qualicore" },
-              { phrase: qaData.trustAnchor, href: qaData.trustHref },
-            ]}
+          <span
+            aria-hidden
+            className="absolute left-0 top-0 h-full w-[3px] bg-gradient-to-b from-finova-cyan via-finova-lightBlue to-finova-magenta"
           />
-        </motion.p>
+          <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-finova-cyan/15 blur-3xl" />
+          <p className="relative max-w-4xl text-base font-light leading-relaxed text-white/70 md:text-lg lg:text-xl lg:leading-relaxed">
+            {highlightRules(qaData.rules, qaData.pillars[hotPillar])}
+          </p>
+        </div>
+
+        {/* Designed in vs bolted on */}
+        <div
+          data-qa-data-y
+          className="relative mt-5 overflow-hidden rounded-[1.75rem] border border-finova-cyan/25 md:mt-6"
+        >
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-finova-cyan/[0.1] via-transparent to-finova-magenta/[0.08]" />
+          <div className="pointer-events-none absolute -left-16 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-finova-cyan/20 blur-3xl" />
+          <div className="relative flex gap-5 p-7 md:gap-8 md:p-10 lg:p-12">
+            <span
+              aria-hidden
+              className="mt-1 hidden h-auto w-[3px] shrink-0 rounded-full bg-gradient-to-b from-finova-cyan via-finova-lightBlue to-finova-magenta sm:block"
+            />
+            <p className="text-lg font-light leading-relaxed text-white/70 md:text-xl md:leading-relaxed lg:text-2xl">
+              {renderDesignedIn(
+                qaData.designedIn,
+                qaData.designedPhrase,
+                qaData.boltedPhrase,
+              )}
+            </p>
+          </div>
+        </div>
+
+        {/* Coda */}
+        <div
+          data-qa-data-y
+          className="mt-8 flex items-center gap-3 border-t border-white/10 pt-8 md:mt-10"
+        >
+          <p className="text-sm font-bold uppercase tracking-[0.16em] text-white/55">
+            <MultiLinkedText
+              text={qaData.coda}
+              links={[
+                {
+                  phrase: qaData.trustAnchor,
+                  href: qaData.trustHref,
+                },
+              ]}
+            />
+          </p>
+          <ArrowRight className="h-4 w-4 text-finova-cyan" aria-hidden />
+        </div>
       </div>
     </section>
   )

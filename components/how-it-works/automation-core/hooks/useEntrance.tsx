@@ -7,7 +7,6 @@ import {
   useRef,
   type ReactNode,
 } from "react"
-import gsap from "gsap"
 
 export type EntranceState = {
   core: number
@@ -39,12 +38,12 @@ export function EntranceProvider({
   ringCount: number
 }) {
   const state = useRef<EntranceState>({
-    core: 0,
-    rings: Array.from({ length: ringCount }, () => 0),
-    nodes: 0,
-    particles: 0,
-    pulses: 0,
-    ready: false,
+    core: 1,
+    rings: Array.from({ length: ringCount }, () => 1),
+    nodes: 1,
+    particles: 1,
+    pulses: 1,
+    ready: true,
   }).current
 
   const started = useRef(false)
@@ -55,79 +54,13 @@ export function EntranceProvider({
       start: () => {
         if (started.current) return
         started.current = true
-        const s = state
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
-
-        const coreProxy = { v: 0 }
-        tl.to(
-          coreProxy,
-          {
-            v: 1,
-            duration: 0.55,
-            onUpdate: () => {
-              s.core = coreProxy.v
-            },
-          },
-          0.05,
-        )
-
-        s.rings.forEach((_, i) => {
-          const proxy = { v: 0 }
-          tl.to(
-            proxy,
-            {
-              v: 1,
-              duration: 0.35,
-              onUpdate: () => {
-                s.rings[i] = proxy.v
-              },
-            },
-            0.25 + i * 0.12,
-          )
-        })
-
-        const nodesProxy = { v: 0 }
-        tl.to(
-          nodesProxy,
-          {
-            v: 1,
-            duration: 0.55,
-            onUpdate: () => {
-              s.nodes = nodesProxy.v
-            },
-          },
-          0.55,
-        )
-
-        const particlesProxy = { v: 0 }
-        tl.to(
-          particlesProxy,
-          {
-            v: 1,
-            duration: 0.5,
-            onUpdate: () => {
-              s.particles = particlesProxy.v
-            },
-          },
-          0.75,
-        )
-
-        const pulsesProxy = { v: 0 }
-        tl.to(
-          pulsesProxy,
-          {
-            v: 1,
-            duration: 0.4,
-            onUpdate: () => {
-              s.pulses = pulsesProxy.v
-            },
-          },
-          1.1,
-        )
-
-        tl.call(() => {
-          s.ready = true
-        })
+        // Already fully revealed so the hero appears with page content.
+        state.core = 1
+        state.rings = state.rings.map(() => 1)
+        state.nodes = 1
+        state.particles = 1
+        state.pulses = 1
+        state.ready = true
       },
     }),
     [state],

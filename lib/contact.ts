@@ -49,6 +49,7 @@ export const contactForm = {
     name: {
       label: "Your name",
       placeholder: "First and last name",
+      error: "Add your name so we know who to reply to",
     },
     email: {
       label: "Work email",
@@ -64,6 +65,7 @@ export const contactForm = {
       label: "What is eating your team's time",
       placeholder:
         "The queue that never clears, the follow-up that always slips, the report someone rebuilds by hand. Tell us in a sentence or two.",
+      error: "Tell us what is eating your team's time",
     },
     phone: {
       label: "Phone or WhatsApp, optional",
@@ -75,6 +77,10 @@ export const contactForm = {
   underButton:
     "A real person replies fast, usually the same day and often much sooner. If it is urgent, book a call directly.",
   urgentAnchor: "book a call directly",
+  // Layout slices — confirmation after send (from underButton / contactAfter)
+  successHeading: "A person reads what you sent",
+  successBody:
+    "A real person replies fast, usually the same day and often much sooner.",
 }
 
 export const contactDirect = {
@@ -91,6 +97,17 @@ export const contactDirect = {
 export const contactAfter = {
   heading: "What happens after you reach out",
   body: "No pressure, and no pushy follow-up sequence. A person reads what you sent, and if there is a fit, we set up a short call to map the workflow costing you the most. If there is not a fit, we will tell you that too, and point you somewhere more useful. Either way, you get an honest read, which is the only thing worth starting a relationship on.",
+  // Layout slices — exact text from body, not new copy
+  promise: "No pressure, and no pushy follow-up sequence.",
+  reads: "A person reads what you sent",
+  fit: "if there is a fit, we set up a short call to map the workflow costing you the most.",
+  fitLabel: "a fit",
+  noFit:
+    "If there is not a fit, we will tell you that too, and point you somewhere more useful.",
+  noFitLabel: "not a fit",
+  eitherWay:
+    "Either way, you get an honest read, which is the only thing worth starting a relationship on.",
+  honestRead: "an honest read",
 }
 
 export const contactInvite = {
