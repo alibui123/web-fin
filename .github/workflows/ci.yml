@@ -1,0 +1,47 @@
+name: CI
+
+# Pre-deploy quality gate only. Vercel's own GitHub integration handles the
+# actual build/deploy on push to main — this workflow does not deploy anything.
+#
+# Flow this repo uses:
+#   1. Work is pushed to `staging`      -> this workflow runs and must pass.
+#   2. A PR is opened staging -> main   -> this workflow runs again as the merge gate.
+#   3. PR is merged manually into main  -> Vercel builds/deploys main automatically.
+on:
+  push:
+    branches: [staging, main]
+  pull_request:
+    branches: [main, staging]
+
+env:
+  # Dummy values so `prisma generate` (package.json "prebuild" script) can
+  # resolve the env() references in prisma/schema.prisma without erroring.
+  # Nothing in this workflow ever opens a real database connection.
+  DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci?schema=public"
+  DIRECT_URL: "postgresql://ci:ci@localhost:5432/ci?schema=public"
+
+jobs:
+  build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Build
+        run: pnpm run build
