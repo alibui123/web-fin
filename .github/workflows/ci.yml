@@ -1,12 +1,14 @@
 name: CI
 
-# Pre-deploy quality gate only. Vercel's own GitHub integration handles the
-# actual build/deploy on push to main — this workflow does not deploy anything.
+# Test/quality gate only. Deployment is handled by the separate CD workflow
+# (.github/workflows/cd.yml), which runs after this one succeeds.
 #
 # Flow this repo uses:
 #   1. Work is pushed to `staging`      -> this workflow runs and must pass.
+#      -> on success, cd.yml deploys staging to a Vercel Preview environment.
 #   2. A PR is opened staging -> main   -> this workflow runs again as the merge gate.
-#   3. PR is merged manually into main  -> Vercel builds/deploys main automatically.
+#   3. PR is merged manually into main  -> this workflow runs on main.
+#      -> on success, cd.yml deploys main to Vercel Production.
 on:
   push:
     branches: [staging, main]

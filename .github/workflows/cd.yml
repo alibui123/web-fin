@@ -1,0 +1,70 @@
+name: CD
+
+# Actions-driven deployment via the Vercel CLI. This is the ONLY thing that
+# should be deploying this project — Vercel's native Git integration must be
+# disconnected (or the repo never connected) in the Vercel dashboard, or you
+# will get duplicate deployments for the same commit. See README/setup notes.
+#
+# Runs only after the CI workflow finishes successfully on staging or main,
+# so nothing gets deployed unless it already passed lint + build.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [staging, main]
+
+concurrency:
+  group: cd-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.workflow_run.head_branch == 'main' && 'production' || 'staging' }}
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Checkout (exact commit CI tested)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel project settings + env vars
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          else
+            vercel pull --yes --environment=preview --token="$VERCEL_TOKEN"
+          fi
+
+      - name: Build with Vercel
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            vercel build --prod --token="$VERCEL_TOKEN"
+          else
+            vercel build --token="$VERCEL_TOKEN"
+          fi
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          if [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
+            url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          else
+            url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN")
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed: $url"
+
+      - name: Summary
+        run: |
+          echo "### Deployed to Vercel :rocket:" >> "$GITHUB_STEP_SUMMARY"
+          echo "Branch: \`${{ github.event.workflow_run.head_branch }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "URL: ${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
