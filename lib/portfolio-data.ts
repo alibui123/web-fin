@@ -187,9 +187,9 @@ export const projects: Project[] = [
     region: "Pakistan",
     liveUrl: "https://telecomfoundation.org.pk",
     summary:
-      "A modern, phone-first corporate website covering the Foundation's mandate, services, leadership, tenders and contact routes.",
-    need: "A government organisation needed a public face that citizens, partners and ministries can trust and find their way around.",
-    built: "A modern, phone-first corporate website covering the Foundation's mandate, services, leadership, tenders and contact routes.",
+      "A modern, phone-first corporate website for a government foundation — mandate, services, leadership, tenders and contact routes in one authoritative public face.",
+    need: "A government organisation needed a public face that citizens, partners and ministries can trust and find their way around. Public information was scattered; tenders and notices were hard to discover; the Foundation needed one place that held up on a phone and at a ministry desk.",
+    built: "A modern, phone-first corporate website covering the Foundation's mandate, services, leadership, tenders and contact routes. Clear journeys for each audience, published as living surfaces rather than a brochure that goes stale after launch.",
     gains: [
       "One authoritative source for public information",
       "Tenders and notices published in one findable place",
@@ -205,6 +205,11 @@ export const projects: Project[] = [
       {
         value: "< 3 s",
         label: "page load target on a mobile connection",
+        kind: "by-design",
+      },
+      {
+        value: "5",
+        label: "public surfaces — mandate, services, leadership, tenders, contact",
         kind: "by-design",
       },
     ],

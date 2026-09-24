@@ -33,6 +33,8 @@ import {
 } from "@/lib/portfolio-data"
 import { Reveal, TextReveal } from "@/components/portfolio/motion-primitives"
 import CaseStudyStoryTrialI from "@/components/portfolio/case-study-story-trial-i"
+import CaseStudyDepthSections from "@/components/portfolio/case-study-depth-sections"
+import { getCaseStudyDepth } from "@/lib/case-study-depth"
 
 const iconMap = {
   PhoneCall,
@@ -89,7 +91,8 @@ export default function CaseStudyPage({ project }: { project: Project }) {
   const nextProject = projects[(currentIndex + 1) % projects.length]
   const prevProject = projects[(currentIndex - 1 + projects.length) % projects.length]
   const related = getRelatedProjects(project, 3)
-  const isCompact = project.depth !== "flagship"
+  const depth = getCaseStudyDepth(project.slug)
+  const isCompact = project.depth !== "flagship" && !depth
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#030712]">
@@ -103,7 +106,11 @@ export default function CaseStudyPage({ project }: { project: Project }) {
         style={{ background: `linear-gradient(90deg, ${project.accent}, transparent)` }}
       />
 
-      <div className="relative z-10 mx-auto max-w-5xl px-4 pb-28 pt-28 sm:px-6 md:pt-32">
+      <div
+        className={`relative z-10 mx-auto px-4 pb-28 pt-28 sm:px-6 md:pt-32 ${
+          depth ? "max-w-6xl" : "max-w-5xl"
+        }`}
+      >
         <motion.div
           initial={reduced ? false : { opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
@@ -120,7 +127,7 @@ export default function CaseStudyPage({ project }: { project: Project }) {
         </motion.div>
 
         {/* Hero */}
-        <div className="mb-16 md:mb-24">
+        <div className={`mb-16 ${depth ? "md:mb-20" : "md:mb-24"}`}>
           <div className="mb-5 flex flex-wrap items-center gap-2">
             <span
               className={`rounded-md border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] ${project.tagColor}`}
@@ -146,7 +153,7 @@ export default function CaseStudyPage({ project }: { project: Project }) {
             className={`font-semibold tracking-[-0.03em] text-white leading-[1.08] ${
               isCompact
                 ? "text-3xl sm:text-4xl md:text-5xl"
-                : "text-4xl sm:text-5xl md:text-6xl"
+                : "text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem]"
             }`}
           />
 
@@ -206,6 +213,8 @@ export default function CaseStudyPage({ project }: { project: Project }) {
             )}
           </motion.div>
         </div>
+
+        {depth && <CaseStudyDepthSections project={project} depth={depth} />}
 
         <CaseStudyStoryTrialI project={project} />
 

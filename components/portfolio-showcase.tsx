@@ -14,6 +14,8 @@ import {
   Bot,
   Building2,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
   Coins,
   Cookie,
   Gamepad2,
@@ -40,6 +42,7 @@ import {
 } from "@/lib/portfolio-data"
 import { Reveal, TextReveal } from "@/components/portfolio/motion-primitives"
 import PortfolioRegions from "@/components/portfolio/portfolio-regions"
+import { cn } from "@/lib/utils"
 
 const iconMap = {
   PhoneCall,
@@ -67,6 +70,7 @@ const PRACTICE_IDS = new Set(PRACTICE_AREAS.map((a) => a.id))
 const REGION_IDS = new Set<Region>(["Pakistan", "Gulf", "USA", "Africa", "Global"])
 const EASE = [0.23, 1, 0.32, 1] as const
 const CELL = { type: "spring" as const, stiffness: 520, damping: 34, mass: 0.45 }
+const DESKTOP_PAGE_SIZE = 9
 
 function parsePractice(value: string | null): PracticeFilter {
   if (value && PRACTICE_IDS.has(value as PracticeArea)) return value as PracticeArea
@@ -154,22 +158,22 @@ function ProjectCard({ project }: { project: Project }) {
         className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-40"
         style={{ background: project.accent }}
       />
-      <div className="relative z-10 flex items-center justify-between mb-6">
+      <div className="relative z-10 mb-6 flex items-center justify-between">
         <div
           className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03]"
           style={{ color: project.accent }}
         >
           <Icon className="h-4 w-4" />
         </div>
-        <span className="font-mono text-[11px] text-white/30 tabular-nums">
+        <span className="font-mono text-[11px] tabular-nums text-white/30">
           {String(project.number).padStart(2, "0")}
         </span>
       </div>
-      <h3 className="relative z-10 text-base font-semibold text-white leading-snug mb-2 line-clamp-2">
+      <h3 className="relative z-10 mb-2 line-clamp-2 text-base font-semibold leading-snug text-white">
         {project.title}
       </h3>
-      <p className="relative z-10 text-sm text-white/45 mb-3">{project.client}</p>
-      <p className="relative z-10 text-sm text-white/55 leading-relaxed line-clamp-3 flex-1">
+      <p className="relative z-10 mb-3 text-sm text-white/45">{project.client}</p>
+      <p className="relative z-10 line-clamp-3 flex-1 text-sm leading-relaxed text-white/55">
         {project.summary}
       </p>
       <div className="relative z-10 mt-5 flex items-center justify-between border-t border-white/[0.06] pt-4">
@@ -177,11 +181,154 @@ function ProjectCard({ project }: { project: Project }) {
           {project.region}
         </span>
         <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/50 transition-colors group-hover:text-[#5ec8d8]">
-          Open
+          Case study
           <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </span>
       </div>
     </Link>
+  )
+}
+
+/** Mobile: practice folders — five rows max until a folder opens */
+function MobileProjectIndex({ items }: { items: Project[] }) {
+  const reduced = useReducedMotion()
+  const [openPractice, setOpenPractice] = useState<PracticeArea | null>(null)
+  const [openSlug, setOpenSlug] = useState<string | null>(null)
+
+  const groups = useMemo(() => {
+    return PRACTICE_AREAS.map((area) => ({
+      ...area,
+      projects: items.filter((p) => p.practice === area.id),
+    })).filter((g) => g.projects.length > 0)
+  }, [items])
+
+  useEffect(() => {
+    setOpenSlug(null)
+    const present = PRACTICE_AREAS.filter((area) =>
+      items.some((p) => p.practice === area.id),
+    )
+    setOpenPractice(present.length === 1 ? present[0].id : null)
+  }, [items])
+
+  if (groups.length === 0) return null
+
+  return (
+    <div className="space-y-2 md:hidden">
+      {groups.map((group) => {
+        const open = openPractice === group.id
+        return (
+          <div
+            key={group.id}
+            className={cn(
+              "overflow-hidden rounded-2xl border transition-colors",
+              open ? "border-white/20 bg-[#0a101c]" : "border-white/[0.08] bg-[#080c16]",
+            )}
+          >
+            <button
+              type="button"
+              aria-expanded={open}
+              onClick={() => {
+                setOpenPractice((cur) => (cur === group.id ? null : group.id))
+                setOpenSlug(null)
+              }}
+              className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold tracking-tight text-white">
+                  {group.label}
+                </span>
+                <span className="mt-0.5 block text-[11px] text-white/40">
+                  {group.projects.length} project{group.projects.length === 1 ? "" : "s"}
+                </span>
+              </span>
+              <motion.span
+                aria-hidden
+                animate={{ rotate: open ? 45 : 0 }}
+                transition={reduced ? { duration: 0 } : { duration: 0.22, ease: EASE }}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-white/45"
+              >
+                <span className="text-lg leading-none">+</span>
+              </motion.span>
+            </button>
+
+            <AnimatePresence initial={false}>
+              {open && (
+                <motion.div
+                  key="body"
+                  initial={reduced ? false : { height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={reduced ? undefined : { height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: EASE }}
+                  className="overflow-hidden"
+                >
+                  <ul className="border-t border-white/[0.06] px-2 pb-2 pt-1">
+                    {group.projects.map((project) => {
+                      const rowOpen = openSlug === project.slug
+                      return (
+                        <li key={project.slug}>
+                          <button
+                            type="button"
+                            aria-expanded={rowOpen}
+                            onClick={() =>
+                              setOpenSlug((cur) => (cur === project.slug ? null : project.slug))
+                            }
+                            className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left transition-colors active:bg-white/[0.04]"
+                          >
+                            <span
+                              className="h-1.5 w-1.5 shrink-0 rounded-full"
+                              style={{ background: project.accent }}
+                              aria-hidden
+                            />
+                            <span className="min-w-0 flex-1 text-[0.9rem] font-medium leading-snug text-white/90">
+                              {project.title}
+                            </span>
+                            <motion.span
+                              aria-hidden
+                              animate={{ rotate: rowOpen ? 90 : 0 }}
+                              className="text-white/35"
+                            >
+                              <ArrowUpRight className="h-3.5 w-3.5" />
+                            </motion.span>
+                          </button>
+
+                          <AnimatePresence initial={false}>
+                            {rowOpen && (
+                              <motion.div
+                                initial={reduced ? false : { height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={reduced ? undefined : { height: 0, opacity: 0 }}
+                                transition={{ duration: 0.25, ease: EASE }}
+                                className="overflow-hidden"
+                              >
+                                <div className="space-y-3 px-2.5 pb-3 pl-6">
+                                  <p className="text-xs text-white/45">
+                                    {project.client} · {project.region}
+                                  </p>
+                                  <p className="text-sm leading-relaxed text-white/60 line-clamp-3">
+                                    {project.summary}
+                                  </p>
+                                  <Link
+                                    href={`/portfolio/${project.slug}`}
+                                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black active:bg-[#5ec8d8]"
+                                  >
+                                    Case study
+                                    <ArrowUpRight className="h-4 w-4" />
+                                  </Link>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
@@ -281,6 +428,7 @@ export default function PortfolioShowcase() {
     parsePractice(searchParams.get("practice")),
   )
   const [region, setRegion] = useState<RegionFilter>(() => parseRegion(searchParams.get("region")))
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     setPractice(parsePractice(searchParams.get("practice")))
@@ -290,6 +438,7 @@ export default function PortfolioShowcase() {
   function updateFilters(nextPractice: PracticeFilter, nextRegion: RegionFilter) {
     setPractice(nextPractice)
     setRegion(nextRegion)
+    setPage(1)
     const params = new URLSearchParams()
     if (nextPractice !== "all") params.set("practice", nextPractice)
     if (nextRegion !== "all") params.set("region", nextRegion)
@@ -307,10 +456,21 @@ export default function PortfolioShowcase() {
     })
   }, [practice, region])
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / DESKTOP_PAGE_SIZE))
+
+  useEffect(() => {
+    setPage((p) => Math.min(p, totalPages))
+  }, [totalPages])
+
+  const paged = useMemo(() => {
+    const start = (page - 1) * DESKTOP_PAGE_SIZE
+    return filtered.slice(start, start + DESKTOP_PAGE_SIZE)
+  }, [filtered, page])
+
   const practiceOptions = useMemo(
     () => [
-      { id: "all", label: "All", count: projects.length },
-      ...PRACTICE_AREAS.map((a) => ({ id: a.id, label: a.short, count: a.count })),
+      { id: "all", label: "All" },
+      ...PRACTICE_AREAS.map((a) => ({ id: a.id, label: a.short })),
     ],
     [],
   )
@@ -448,32 +608,74 @@ export default function PortfolioShowcase() {
 
           <p className="mb-6 font-mono text-[11px] text-white/30" aria-live="polite">
             {filtered.length} of {projects.length} shown
+            <span className="hidden md:inline">
+              {" "}
+              · page {page} of {totalPages}
+            </span>
           </p>
 
-          <motion.ul
-            layout
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            <AnimatePresence mode="popLayout">
-              {filtered.map((project) => (
-                <motion.li
-                  key={project.slug}
-                  layout={!reduced}
-                  initial={reduced ? false : { opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.14 } }}
-                  transition={{
-                    layout: { type: "spring", stiffness: 260, damping: 34 },
-                    duration: 0.22,
-                    ease: EASE,
-                  }}
-                  className="min-w-0"
-                >
-                  <ProjectCard project={project} />
-                </motion.li>
-              ))}
+          <MobileProjectIndex items={filtered} />
+
+          <div className="hidden md:block">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.ul
+                key={`${practice}-${region}-${page}`}
+                initial={reduced ? false : { opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduced ? undefined : { opacity: 0, y: -8 }}
+                transition={{ duration: 0.28, ease: EASE }}
+                className="grid grid-cols-3 gap-4"
+              >
+                {paged.map((project) => (
+                  <li key={project.slug} className="min-w-0">
+                    <ProjectCard project={project} />
+                  </li>
+                ))}
+              </motion.ul>
             </AnimatePresence>
-          </motion.ul>
+          </div>
+
+          {filtered.length > 0 && totalPages > 1 && (
+            <nav
+              aria-label="Project pages"
+              className="mt-10 hidden items-center justify-center gap-2 md:flex"
+            >
+              <button
+                type="button"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  aria-current={n === page ? "page" : undefined}
+                  onClick={() => setPage(n)}
+                  className={cn(
+                    "inline-flex h-10 min-w-10 items-center justify-center rounded-full px-3 text-sm font-medium tabular-nums transition-colors",
+                    n === page
+                      ? "bg-white text-black"
+                      : "border border-white/15 text-white/65 hover:border-white/30 hover:text-white",
+                  )}
+                >
+                  {n}
+                </button>
+              ))}
+              <button
+                type="button"
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-white/30 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                aria-label="Next page"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </nav>
+          )}
 
           {filtered.length === 0 && (
             <p className="py-16 text-center text-sm text-white/40">

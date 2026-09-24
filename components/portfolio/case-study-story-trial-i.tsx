@@ -192,7 +192,7 @@ function GainCard({
             }
       }
       whileHover={reduced ? undefined : { y: -4, transition: { duration: 0.25 } }}
-      className="group relative flex min-h-[200px] flex-col overflow-hidden rounded-3xl border border-white/[0.12] bg-[#0a101c] p-6 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.75)] md:p-7"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.12] bg-[#0a101c] p-5 shadow-[0_16px_40px_-24px_rgba(0,0,0,0.75)] sm:rounded-3xl md:p-6"
     >
       <div
         className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-45"
@@ -200,7 +200,7 @@ function GainCard({
       />
       <div className="pointer-events-none absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.07)_1px,transparent_0)] bg-[size:18px_18px]" />
 
-      <motion.div variants={lineVariants} className="relative z-10 mb-5">
+      <motion.div variants={lineVariants} className="relative z-10 mb-3">
         <span
           className="block h-px w-10 transition-all duration-300 group-hover:w-14"
           style={{ background: accent }}
@@ -209,7 +209,7 @@ function GainCard({
 
       <motion.p
         variants={textVariants}
-        className="relative z-10 mt-auto text-[0.95rem] md:text-base font-light leading-snug text-white tracking-[-0.01em]"
+        className="relative z-10 text-[0.95rem] font-light leading-snug tracking-[-0.01em] text-white md:text-base"
       >
         {text}
       </motion.p>
