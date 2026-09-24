@@ -44,10 +44,10 @@ export default function FinalCta() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/solutions/ai-consulting"
+              href="/consultation"
               className="group inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-full border border-white/10 bg-transparent text-white/70 font-bold tracking-[0.12em] uppercase text-xs transition-all duration-300 hover:border-finova-cyan/40 hover:text-white"
             >
-              Book a consulting call
+              Book a free audit
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

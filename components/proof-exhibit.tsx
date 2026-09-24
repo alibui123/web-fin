@@ -13,6 +13,7 @@ const cards = [
     chip: "Live in production",
     accent: false,
     entity: "Telecom Foundation",
+    href: "/customers/telecom-foundation",
     sector: "Ministry of IT and Telecom subsidiary",
     story:
       "Public institutions do not hand over their core systems on faith, they test and scrutinize and hold vendors to a standard most private buyers never apply. We automated nine modules across their Odoo ERP, HR, task assignment, KPI and performance tracking, and accounts, turning administration that used to be done by hand into agents that run the back office on their own, always with a person in control.",
@@ -28,6 +29,7 @@ const cards = [
     chip: "Measured in production",
     accent: false,
     entity: "Sirius Solutions Global",
+    href: "/customers/sirius-solutions",
     sector: "US healthcare medical billing",
     story:
       "Confirming a patient's coverage meant staff sitting through insurance hold queues by hand, all day. Our agent now makes those calls at roughly fifty verifications a day, confirms the coverage, and writes the structured result straight back into their system. The call is only the trigger. The writeback into the record is the work.",
@@ -43,6 +45,7 @@ const cards = [
     chip: "Measured in production",
     accent: true,
     entity: "Advanzatech",
+    href: "/customers/advanzatech",
     sector: "MENA cybersecurity distributor",
     story:
       "In its second month live, our outbound agent booked seventy qualified meetings for their sales team, qualifying leads, handling objections, and booking straight into the calendar with full context waiting for the closer. Every one of those meetings is pipeline the team did not have to source by hand.",
@@ -121,7 +124,7 @@ export default function ProofExhibit() {
 
                 <div className="mb-4">
                   <Link
-                    href="/customers"
+                    href={card.href}
                     className="text-white font-bold hover:text-finova-cyan transition-colors"
                   >
                     {card.entity}
@@ -164,10 +167,10 @@ export default function ProofExhibit() {
             as of July 2026.
           </p>
           <Link
-            href="/customers"
+            href="/portfolio"
             className="group inline-flex items-center gap-2 text-sm font-bold tracking-[0.12em] uppercase text-finova-cyan hover:text-white transition-colors"
           >
-            See customer stories
+            See all case studies
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>

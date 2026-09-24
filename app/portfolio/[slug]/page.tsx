@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!project) return {}
   return {
     title: `${project.title} — Case Study | Finova`,
-    description: project.description,
+    description: project.summary,
   }
 }
 

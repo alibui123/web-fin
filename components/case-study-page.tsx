@@ -1,327 +1,392 @@
 "use client"
 
-import { motion } from "framer-motion"
+import type { ReactNode } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import {
   ArrowLeft,
-  ArrowRight,
-  Target,
-  Zap,
-  TrendingUp,
-  Building,
-  Clock,
-  Briefcase,
+  ArrowUpRight,
+  Bot,
+  Building2,
+  Calendar,
+  Coins,
+  Cookie,
+  ExternalLink,
+  Gamepad2,
+  Globe,
+  GraduationCap,
+  Landmark,
+  Leaf,
+  PhoneCall,
+  Plane,
+  Search,
+  Shield,
+  Smartphone,
+  Wheat,
+} from "lucide-react"
+import type { MetricKind, Project } from "@/lib/portfolio-data"
+import {
+  METRIC_LEGEND,
+  getPracticeLabel,
+  getRelatedProjects,
+  projects,
+} from "@/lib/portfolio-data"
+import { Reveal, TextReveal } from "@/components/portfolio/motion-primitives"
+import CaseStudyStoryTrialI from "@/components/portfolio/case-study-story-trial-i"
+
+const iconMap = {
   PhoneCall,
   Globe,
   Gamepad2,
   GraduationCap,
   Smartphone,
-} from "lucide-react"
-import type { Project } from "@/lib/portfolio-data"
-import { projects } from "@/lib/portfolio-data"
-
-const iconMap = {
-  PhoneCall: PhoneCall,
-  Globe: Globe,
-  Gamepad2: Gamepad2,
-  GraduationCap: GraduationCap,
-  Smartphone: Smartphone,
+  Building2,
+  Bot,
+  Landmark,
+  Coins,
+  Calendar,
+  Search,
+  Plane,
+  Wheat,
+  Cookie,
+  Shield,
+  Leaf,
 }
+
+const metricStyles: Record<MetricKind, { badge: string; glow: string }> = {
+  verified: {
+    badge: "bg-emerald-400/15 text-emerald-300 border-emerald-400/25",
+    glow: "rgba(52,211,153,0.15)",
+  },
+  benchmark: {
+    badge: "bg-amber-400/15 text-amber-300 border-amber-400/25",
+    glow: "rgba(251,191,36,0.12)",
+  },
+  "by-design": {
+    badge: "bg-[#5ec8d8]/15 text-[#5ec8d8] border-[#5ec8d8]/25",
+    glow: "rgba(94,200,216,0.12)",
+  },
+}
+
+const metricLabels: Record<MetricKind, string> = {
+  verified: "Verified",
+  benchmark: "Industry benchmark",
+  "by-design": "By design",
+}
+
+const depthLabel: Record<Project["depth"], string | null> = {
+  flagship: "Flagship",
+  standard: null,
+  program: "Program",
+}
+
+const EASE = [0.23, 1, 0.32, 1] as const
 
 export default function CaseStudyPage({ project }: { project: Project }) {
   const Icon = iconMap[project.iconName]
+  const reduced = useReducedMotion()
   const currentIndex = projects.findIndex((p) => p.slug === project.slug)
   const nextProject = projects[(currentIndex + 1) % projects.length]
   const prevProject = projects[(currentIndex - 1 + projects.length) % projects.length]
+  const related = getRelatedProjects(project, 3)
+  const isCompact = project.depth !== "flagship"
 
   return (
-    <div className="relative min-h-screen bg-[#030712] overflow-hidden selection:bg-white/20">
-      {/* Immersive Ambient Backgrounds */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] opacity-20 mix-blend-screen pointer-events-none" style={{ background: `radial-gradient(circle, ${project.accent}, transparent)` }} />
-      <div className="absolute top-[40%] right-[-10%] w-[40vw] h-[40vw] rounded-full blur-[100px] opacity-10 mix-blend-screen pointer-events-none" style={{ background: `radial-gradient(circle, ${project.accent}, transparent)` }} />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:6rem_6rem] opacity-20 pointer-events-none" />
+    <div className="relative min-h-screen overflow-x-hidden bg-[#030712]">
+      <div
+        className="pointer-events-none absolute left-[-10%] top-[-5%] h-[50vw] w-[50vw] rounded-full opacity-25 blur-[100px]"
+        style={{ background: project.accent }}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+      <div
+        className="fixed top-0 left-0 z-50 h-1 w-full"
+        style={{ background: `linear-gradient(90deg, ${project.accent}, transparent)` }}
+      />
 
-      {/* Top gradient accent bar */}
-      <div className={`fixed top-0 left-0 w-full h-1.5 bg-gradient-to-r ${project.gradient} z-50 shadow-[0_0_20px_rgba(255,255,255,0.5)]`} />
-
-      <div className="container mx-auto px-4 sm:px-6 pt-32 pb-32 relative z-10 max-w-6xl">
-
-        {/* Back Navigation */}
+      <div className="relative z-10 mx-auto max-w-5xl px-4 pb-28 pt-28 sm:px-6 md:pt-32">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
+          initial={reduced ? false : { opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-12 md:mb-20"
+          transition={{ duration: 0.45, ease: EASE }}
+          className="mb-12"
         >
           <Link
             href="/portfolio"
-            className="inline-flex items-center gap-3 text-white/40 hover:text-white transition-colors duration-300 group text-sm font-bold tracking-widest uppercase"
+            className="group inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.16em] text-white/40 transition-colors hover:text-white"
           >
-            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:bg-white/10 group-hover:border-white/20 transition-all">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            </div>
-            Back to Portfolio
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Portfolio
           </Link>
         </motion.div>
 
-        {/* Hero Section - Split Layout */}
-        <div className="flex flex-col lg:flex-row gap-16 items-start mb-24 md:mb-32 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 w-full"
-          >
-            <div className="flex flex-wrap items-center gap-4 mb-8">
-              <span className={`px-5 py-2 rounded-full text-xs font-black border uppercase tracking-widest shadow-lg ${project.tagColor} backdrop-blur-md`}>
-                {project.category}
+        {/* Hero */}
+        <div className="mb-16 md:mb-24">
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            <span
+              className={`rounded-md border px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] ${project.tagColor}`}
+            >
+              {getPracticeLabel(project.practice)}
+            </span>
+            <span className="rounded-md border border-white/10 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/45">
+              {project.industry}
+            </span>
+            {depthLabel[project.depth] && (
+              <span className="rounded-md bg-white px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black">
+                {depthLabel[project.depth]}
               </span>
-              {project.featured && (
-                <span className="px-5 py-2 rounded-full text-xs font-black bg-white text-black uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                  Featured Case Study
-                </span>
-              )}
-            </div>
+            )}
+          </div>
 
-            <h1 className={`text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.95] mb-8 text-transparent bg-clip-text bg-gradient-to-br ${project.gradient} drop-shadow-2xl`}>
-              {project.title}
-            </h1>
+          <p className="mb-4 font-mono text-[12px] tabular-nums text-white/30">
+            {String(project.number).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+          </p>
 
-            <p className="text-xl md:text-3xl text-white/80 leading-relaxed font-light max-w-3xl">
-              {project.description}
-            </p>
-          </motion.div>
+          <TextReveal
+            text={project.title}
+            className={`font-semibold tracking-[-0.03em] text-white leading-[1.08] ${
+              isCompact
+                ? "text-3xl sm:text-4xl md:text-5xl"
+                : "text-4xl sm:text-5xl md:text-6xl"
+            }`}
+          />
 
-          {/* Large Abstract Icon Visual */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="hidden lg:flex w-[400px] h-[400px] shrink-0 items-center justify-center relative"
+          <motion.p
+            initial={reduced ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: EASE, delay: 0.35 }}
+            className={`mt-6 max-w-3xl font-light leading-relaxed text-white/60 ${
+              isCompact ? "text-lg" : "text-xl md:text-2xl"
+            }`}
           >
-            <div className="absolute inset-0 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-3xl shadow-[inset_0_0_100px_rgba(255,255,255,0.02)]" />
-            <div className="absolute inset-10 rounded-full border border-white/10 bg-white/[0.02] shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center overflow-hidden">
-              <div className={`absolute inset-0 opacity-20 bg-gradient-to-tr ${project.gradient}`} />
-              <Icon className="w-32 h-32 text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]" />
-            </div>
-            
-            {/* Orbiting element */}
-            <motion.div 
-              animate={{ rotate: 360 }} 
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0"
-            >
-              <div className="w-4 h-4 rounded-full bg-white absolute top-[-2px] left-1/2 -translate-x-1/2 shadow-[0_0_20px_rgba(255,255,255,0.8)]" style={{ backgroundColor: project.accent }} />
-            </motion.div>
+            {project.summary}
+          </motion.p>
+
+          <motion.div
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mt-8 grid gap-6 border-t border-white/[0.08] pt-6 sm:grid-cols-3"
+          >
+            <Meta
+              label="Client"
+              value={
+                project.clientSlug ? (
+                  <Link
+                    href={`/customers/${project.clientSlug}`}
+                    className="text-white transition-colors hover:text-[#5ec8d8]"
+                  >
+                    {project.client}
+                  </Link>
+                ) : (
+                  project.client
+                )
+              }
+            />
+            <Meta label="Region" value={project.region} />
+            {project.liveUrl ? (
+              <Meta
+                label="Live"
+                value={
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[#5ec8d8] transition-colors hover:text-white"
+                  >
+                    Visit site
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                }
+              />
+            ) : (
+              <Meta
+                label="Practice"
+                value={getPracticeLabel(project.practice)}
+              />
+            )}
           </motion.div>
         </div>
 
-        {/* Project Meta Info - Floating Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="w-full bg-[#0a0f1d]/80 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 md:p-12 mb-32 shadow-[0_30px_60px_rgba(0,0,0,0.4)] flex flex-col md:flex-row justify-between gap-10 relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
-          
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white/40 uppercase tracking-widest mb-3 flex items-center gap-2"><Building className="w-4 h-4" /> Client</p>
-            <p className="text-2xl font-black text-white">{project.client}</p>
-          </div>
-          <div className="hidden md:block w-px bg-white/10" />
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white/40 uppercase tracking-widest mb-3 flex items-center gap-2"><Clock className="w-4 h-4" /> Timeline</p>
-            <p className="text-2xl font-black text-white">{project.duration}</p>
-          </div>
-          <div className="hidden md:block w-px bg-white/10" />
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white/40 uppercase tracking-widest mb-3 flex items-center gap-2"><Briefcase className="w-4 h-4" /> Role</p>
-            <p className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">{project.role}</p>
-          </div>
-        </motion.div>
+        <CaseStudyStoryTrialI project={project} />
 
-        {/* Challenge & Solution - Staggered Layout */}
-        <div className="relative mb-32 md:mb-40">
-          {/* Connecting line */}
-          <div className="hidden md:block absolute left-1/2 top-[10%] bottom-[10%] w-px bg-gradient-to-b from-finova-magenta/50 via-finova-cyan/50 to-transparent -translate-x-1/2" />
-          
-          <div className="flex flex-col gap-16 md:gap-32">
-            {/* Challenge */}
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full md:w-[calc(50%-3rem)] mr-auto relative"
+        {/* Metrics bento */}
+        <Reveal className="mb-20">
+          <div className="mb-6 flex items-center gap-3">
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10"
+              style={{ color: project.accent, background: `${project.accent}14` }}
             >
-              <div className="hidden md:flex absolute top-12 -right-[3rem] translate-x-1/2 w-8 h-8 rounded-full bg-[#030712] border-2 items-center justify-center z-10" style={{ borderColor: project.accent }}>
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: project.accent }} />
-              </div>
-
-              <div className="bg-gradient-to-br from-white/[0.04] to-transparent border border-white/10 rounded-[2.5rem] p-10 md:p-14 hover:border-white/20 transition-colors shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-finova-magenta/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-finova-magenta/20 transition-colors duration-700" />
-                
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-inner">
-                    <Target className="w-6 h-6 text-finova-magenta" />
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-widest">The Challenge</h2>
-                </div>
-                <p className="text-white/60 leading-relaxed text-lg md:text-xl font-light">
-                  {project.challenge}
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Solution */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="w-full md:w-[calc(50%-3rem)] ml-auto relative"
-            >
-              <div className="hidden md:flex absolute top-12 -left-[3rem] -translate-x-1/2 w-8 h-8 rounded-full bg-[#030712] border-2 items-center justify-center z-10" style={{ borderColor: project.accent }}>
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: project.accent }} />
-              </div>
-
-              <div className="bg-gradient-to-br from-white/[0.04] to-transparent border border-white/10 rounded-[2.5rem] p-10 md:p-14 hover:border-white/20 transition-colors shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-64 h-64 bg-finova-cyan/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-finova-cyan/20 transition-colors duration-700" />
-                
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-inner">
-                    <Zap className="w-6 h-6 text-finova-cyan" />
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-widest">The Solution</h2>
-                </div>
-                <p className="text-white/60 leading-relaxed text-lg md:text-xl font-light">
-                  {project.solution}
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Project Impact Highlight */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-32 relative"
-        >
-          <div className="absolute inset-0 rounded-[3rem] blur-xl opacity-20 pointer-events-none" style={{ background: `linear-gradient(to right, ${project.accent}, transparent)` }} />
-          <div className="bg-[#050a15] border border-white/10 rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
-             <p className="text-sm font-bold text-white/50 uppercase tracking-widest mb-6">Bottom Line Impact</p>
-             <h3 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight uppercase tracking-tighter" style={{ textShadow: `0 0 40px ${project.accent}80` }}>
-               "{project.impact}"
-             </h3>
-          </div>
-        </motion.div>
-
-        {/* Results & Tech Grid */}
-        <div className="grid lg:grid-cols-12 gap-12 mb-32">
-          {/* Results List */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="lg:col-span-7"
-          >
-            <div className="flex items-center gap-4 mb-10">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                <TrendingUp className="w-6 h-6 text-emerald-400" />
-              </div>
-              <h2 className="text-3xl font-black text-white uppercase tracking-widest">Key Results</h2>
+              <Icon className="h-5 w-5" />
             </div>
+            <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-white">
+              Proof metrics
+            </h2>
+          </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
-              {project.results.map((result, idx) => (
+          <div
+            className={`grid gap-3 ${
+              isCompact ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
+            {project.metrics.map((metric, i) => (
+              <motion.div
+                key={`${metric.value}-${metric.label}`}
+                initial={reduced ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, ease: EASE, delay: i * 0.06 }}
+                className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#080c16] p-6"
+              >
                 <div
-                  key={idx}
-                  className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 hover:bg-white/[0.04] hover:border-white/15 transition-all duration-300 relative overflow-hidden group"
+                  className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full blur-2xl"
+                  style={{ background: metricStyles[metric.kind].glow }}
+                />
+                <span
+                  className={`relative inline-flex rounded-md border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${metricStyles[metric.kind].badge}`}
                 >
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <p className="text-lg text-white/80 font-medium leading-relaxed">{result}</p>
-                </div>
+                  {metricLabels[metric.kind]}
+                </span>
+                <p className="relative mt-4 text-2xl md:text-3xl font-semibold tabular-nums tracking-tight text-white">
+                  {metric.value}
+                </p>
+                <p className="relative mt-2 text-sm leading-relaxed text-white/55">
+                  {metric.label}
+                </p>
+                {metric.source && (
+                  <p className="relative mt-3 text-[10px] uppercase tracking-[0.12em] text-white/30">
+                    Source · {metric.source}
+                  </p>
+                )}
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-5 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 md:p-5">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/35">
+              How to read the numbers
+            </p>
+            <ul className="space-y-1.5">
+              {METRIC_LEGEND.map((item) => (
+                <li key={item.kind} className="text-xs leading-relaxed text-white/45">
+                  <span className="font-semibold text-white/70">{item.label}.</span>{" "}
+                  {item.description}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
+
+        {/* Related — asymmetric mini condition grid */}
+        {related.length > 0 && (
+          <Reveal className="mb-20">
+            <h2 className="mb-5 text-xl font-semibold tracking-tight text-white">
+              Related work
+            </h2>
+            <div className="grid grid-cols-12 gap-3">
+              {related.map((r, i) => (
+                <Link
+                  key={r.slug}
+                  href={`/portfolio/${r.slug}`}
+                  className={`group col-span-12 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#080c16] p-5 transition-colors hover:border-white/20 ${
+                    i === 0 ? "sm:col-span-7" : i === 1 ? "sm:col-span-5" : "sm:col-span-12"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/35">
+                        {getPracticeLabel(r.practice)}
+                      </p>
+                      <p className="text-base font-semibold text-white transition-colors group-hover:text-[#5ec8d8]">
+                        {r.title}
+                      </p>
+                      <p className="mt-1 text-xs text-white/40">{r.client}</p>
+                    </div>
+                    <ArrowUpRight className="h-4 w-4 shrink-0 text-white/30 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#5ec8d8]" />
+                  </div>
+                </Link>
               ))}
             </div>
-          </motion.div>
+            {project.clientSlug && (
+              <Link
+                href={`/customers/${project.clientSlug}`}
+                className="mt-5 inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.16em] text-white/40 transition-colors hover:text-[#5ec8d8]"
+              >
+                Full {project.client} story
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
+          </Reveal>
+        )}
 
-          {/* Tech Stack */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-5"
-          >
-            <div className="bg-[#050a15] border border-white/10 rounded-[2.5rem] p-10 h-full">
-              <h2 className="text-xl font-black text-white uppercase tracking-widest mb-10 pb-6 border-b border-white/10">
-                Technology Stack
-              </h2>
-              <div className="flex flex-wrap gap-4">
-                {project.stack.map((s) => (
-                  <span 
-                    key={s} 
-                    className="px-6 py-4 rounded-2xl text-sm font-bold border border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 transition-all cursor-default shadow-sm hover:shadow-md"
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Next / Prev Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="border-t border-white/10 pt-16 relative"
-        >
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-          <p className="text-sm font-bold tracking-widest uppercase text-white/40 text-center mb-12">Continue Exploring</p>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <Link href={`/portfolio/${prevProject.slug}`} className="group block">
-              <div className="flex flex-col gap-4 p-10 rounded-[2.5rem] border border-white/5 bg-[#030712] hover:bg-white/[0.02] hover:border-white/20 transition-all duration-500 h-full relative overflow-hidden">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500" style={{ background: `linear-gradient(to right, ${prevProject.accent}, transparent)` }} />
-                <div className="flex items-center gap-3 text-white/40 group-hover:text-white transition-colors text-xs font-bold tracking-widest uppercase relative z-10">
-                  <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:-translate-x-2 transition-transform">
-                    <ArrowLeft className="w-4 h-4" />
-                  </div>
-                  Previous Project
-                </div>
-                <p className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight relative z-10">
-                  {prevProject.title}
-                </p>
-              </div>
+        {/* CTA */}
+        <Reveal className="mb-16 overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-[#0a1220] to-[#05080f] p-8 text-center md:p-12">
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-white mb-3">
+            See where this applies to your operation.
+          </h2>
+          <p className="mx-auto mb-8 max-w-lg font-light text-white/50">
+            Free audit. You get the findings whether or not we work together.
+          </p>
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/consultation"
+              className="inline-flex items-center justify-center rounded-full bg-white px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-black transition-colors hover:bg-[#5ec8d8]"
+            >
+              Book a free audit
             </Link>
-            
-            <Link href={`/portfolio/${nextProject.slug}`} className="group block">
-              <div className="flex flex-col gap-4 p-10 rounded-[2.5rem] border border-white/5 bg-[#030712] hover:bg-white/[0.02] hover:border-white/20 transition-all duration-500 h-full relative overflow-hidden text-right md:items-end">
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500" style={{ background: `linear-gradient(to left, ${nextProject.accent}, transparent)` }} />
-                <div className="flex items-center justify-end gap-3 text-white/40 group-hover:text-white transition-colors text-xs font-bold tracking-widest uppercase relative z-10">
-                  Next Project
-                  <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:translate-x-2 transition-transform">
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
-                <p className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight relative z-10">
-                  {nextProject.title}
-                </p>
-              </div>
+            <Link
+              href="/how-it-works"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:border-[#5ec8d8]/50"
+            >
+              How we work
             </Link>
           </div>
-        </motion.div>
+        </Reveal>
 
+        {/* Prev / next */}
+        <div className="border-t border-white/[0.08] pt-10">
+          <div className="grid gap-3 md:grid-cols-2">
+            <NavCard href={`/portfolio/${prevProject.slug}`} label="Previous" title={prevProject.title} reverse />
+            <NavCard href={`/portfolio/${nextProject.slug}`} label="Next" title={nextProject.title} />
+          </div>
+        </div>
       </div>
     </div>
+  )
+}
+
+function Meta({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div>
+      <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.16em] text-white/35">
+        {label}
+      </p>
+      <div className="text-sm font-semibold text-white">{value}</div>
+    </div>
+  )
+}
+
+function NavCard({
+  href,
+  label,
+  title,
+  reverse,
+}: {
+  href: string
+  label: string
+  title: string
+  reverse?: boolean
+}) {
+  return (
+    <Link
+      href={href}
+      className={`group flex flex-col gap-2 rounded-2xl border border-white/[0.06] bg-[#080c16] p-6 transition-colors hover:border-white/15 ${
+        reverse ? "" : "md:items-end md:text-right"
+      }`}
+    >
+      <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/35 group-hover:text-white/60">
+        {label}
+      </span>
+      <span className="text-lg font-semibold tracking-tight text-white">{title}</span>
+    </Link>
   )
 }
